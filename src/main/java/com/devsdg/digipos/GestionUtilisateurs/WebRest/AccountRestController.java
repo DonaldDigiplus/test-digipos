@@ -34,19 +34,4 @@ public class AccountRestController {
         return accountMetier.ConnectAccount(login);
     }
 
-    @GetMapping("/logout")
-    public String page_deconnexion(HttpServletRequest request, HttpServletResponse response){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
-            AppUser user = (AppUser)auth.getPrincipal();
-            appUserMetier.desactiveUser(user.getId_user());
-            new SecurityContextLogoutHandler().logout(request,response,auth);
-        }
-        return "redirect:/";
-    }
-
-    @GetMapping("/")
-    public String index(){
-        return "index";
-    }
 }

@@ -50,6 +50,18 @@ public class AppRoleService implements AppRoleMetier {
     }
 
     @Override
+    public AppRoleDTO updateRoleByRolename(String rolename) {
+        AppRole role = appRoleRepository.findByRolename(rolename);
+        if(role!=null){
+            role.setRolename(rolename);
+            role = appRoleRepository.save(role);
+            return this.permuteAppRoleToAppRoleDTO(role);
+        } else {
+            throw new ErrorMessages("Le role que vous essayer de mettre a jour n'existe deja.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
     public AppRoleDTO getRole(String rolename) {
         AppRole role = appRoleRepository.findByRolename(rolename);
         return this.permuteAppRoleToAppRoleDTO(role);
