@@ -25,8 +25,7 @@ public class AppUser implements Serializable {
     @Column(unique = true)
     private String phone;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String nomcomplet;
     private String cni;
     private boolean ativeuser = true ;
     @Column(columnDefinition = "text")
@@ -82,20 +81,12 @@ public class AppUser implements Serializable {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getNomcomplet() {
+        return nomcomplet;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setNomcomplet(String nomcomplet) {
+        this.nomcomplet = nomcomplet;
     }
 
     public String getCni() {

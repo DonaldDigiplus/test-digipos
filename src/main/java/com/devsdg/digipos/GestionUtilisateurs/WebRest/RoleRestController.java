@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin("*")
-@RestController("/role")
+@RestController
 @Transactional
+@RequestMapping(("/role"))
 public class RoleRestController {
     @Autowired
     AppRoleMetier appRoleMetier;

@@ -1,15 +1,12 @@
 package com.devsdg.digipos.GestionUtilisateurs.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 public class AppUserDTO {
     private Long id_user;
     private String username;
     private String email;
     private String phone;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String nomcomplet;
     private String cni;
     private String photouser;
     private boolean client;
@@ -69,20 +66,12 @@ public class AppUserDTO {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getNomcomplet() {
+        return nomcomplet;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setNomcomplet(String nomcomplet) {
+        this.nomcomplet = nomcomplet;
     }
 
     public String getCni() {

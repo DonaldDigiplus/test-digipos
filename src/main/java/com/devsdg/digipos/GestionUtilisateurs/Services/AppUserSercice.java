@@ -121,23 +121,23 @@ public class AppUserSercice implements AppUserMetier {
         if(appUserDTO.isClient()){
             ClientPOS clientPOS = clientRepository.getOne(id_user);
             this.updateProccess(clientPOS, appUserDTO);
-            return this.permuteAppUserToAppUserDTO(clientPOS);
+            return permuteAppUserToAppUserDTO(clientPOS);
         } else if(appUserDTO.isAdmin()){
             Admin admin = adminRepository.getOne(id_user);
             this.updateProccess(admin, appUserDTO);
-            return this.permuteAppUserToAppUserDTO(admin);
+            return permuteAppUserToAppUserDTO(admin);
         } else if (appUserDTO.isSupport()){
             Support support = supportRepository.getOne(id_user);
             this.updateProccess(support, appUserDTO);
-            return this.permuteAppUserToAppUserDTO(support);
+            return permuteAppUserToAppUserDTO(support);
         } else if(appUserDTO.isProprietaire()){
             Proprietaire proprietaire = proprietaireRepository.getOne(id_user);
             this.updateProccess(proprietaire, appUserDTO);
-            return this.permuteAppUserToAppUserDTO(proprietaire);
+            return permuteAppUserToAppUserDTO(proprietaire);
         } else if(appUserDTO.isVendeur()){
             Vendeur vendeur = vendeurRepository.getOne(id_user);
             this.updateProccess(vendeur, appUserDTO);
-            return this.permuteAppUserToAppUserDTO(vendeur);
+            return permuteAppUserToAppUserDTO(vendeur);
         }
         return null;
     }
@@ -152,15 +152,14 @@ public class AppUserSercice implements AppUserMetier {
         if (!appUserDTO.getUsername().equalsIgnoreCase("")) {
             user.setUsername(appUserDTO.getUsername());
         }
-        user.setFirstName(appUserDTO.getFirstName());
-        user.setLastName(appUserDTO.getLastName());
+        user.setNomcomplet(appUserDTO.getNomcomplet());
         user.setPhotouser(appUserDTO.getPhotouser());
         user.setCni(appUserDTO.getCni());
     }
 
     @Override
     public AppUserDTO getUser(Long id_user) {
-        return this.permuteAppUserToAppUserDTO(appUserRepository.getOne(id_user));
+        return permuteAppUserToAppUserDTO(appUserRepository.getOne(id_user));
     }
 
     @Override

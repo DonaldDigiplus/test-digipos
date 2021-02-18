@@ -41,7 +41,7 @@ public class JWTauthentificationFilter extends UsernamePasswordAuthenticationFil
             System.out.println("username: "+appUser.getUsername());
             System.out.println("********************************");
             System.out.println("email: "+appUser.getEmail());*/
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken( appUser.getPhone(),appUser.getPassword()));
+            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken( appUser.getUsername(),appUser.getPassword()));
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors de l' execution : "+e);
         }
