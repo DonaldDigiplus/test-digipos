@@ -1,11 +1,13 @@
 package com.devsdg.digipos.Configurations.InitializeApp;
 
+import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppRoleDTO;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppRoleMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,19 +20,22 @@ public class InitializeData {
     @Bean
     void initializeSuperAdmin(){
         AppUserDTO user= appUserMetier.saveUser(new AppUserDTO("root","1234","digiplusproject@gmail.com","6"));
+        if(user!=null){
+            //Creation des role
+            appRoleMetier.saveRole(new AppRoleDTO("SUPERADMIN"));
+            appRoleMetier.saveRole(new AppRoleDTO("ADMIN"));
+            appRoleMetier.saveRole(new AppRoleDTO("CLIENT"));
+            appRoleMetier.saveRole(new AppRoleDTO("VENDEUR"));
+            appRoleMetier.saveRole(new AppRoleDTO("PROPRIETAIRE"));
+            //Affectation des roles au superadmin
+            appRoleMetier.addRoleToUser(user.getId_user(),"CLIENT");
+            appRoleMetier.addRoleToUser(user.getId_user(),"ADMIN");
+            appRoleMetier.addRoleToUser(user.getId_user(),"SUPERADMIN");
+            appRoleMetier.addRoleToUser(user.getId_user(),"VENDEUR");
+            appRoleMetier.addRoleToUser(user.getId_user(),"PROPRIETAIRE");
+        } else
+            throw new ErrorMessages("L'utilisateur n'a pas ete cree.", HttpStatus.BAD_REQUEST);
 
-        //Creation des role
-        appRoleMetier.saveRole(new AppRoleDTO("SUPERADMIN"));
-        appRoleMetier.saveRole(new AppRoleDTO("ADMIN"));
-        appRoleMetier.saveRole(new AppRoleDTO("CLIENT"));
-        appRoleMetier.saveRole(new AppRoleDTO("VENDEUR"));
-        appRoleMetier.saveRole(new AppRoleDTO("PROPRIETAIRE"));
-        //Affectation des roles au superadmin
-        appRoleMetier.addRoleToUser(user.getId_user(),"CLIENT");
-        appRoleMetier.addRoleToUser(user.getId_user(),"ADMIN");
-        appRoleMetier.addRoleToUser(user.getId_user(),"SUPERADMIN");
-        appRoleMetier.addRoleToUser(user.getId_user(),"VENDEUR");
-        appRoleMetier.addRoleToUser(user.getId_user(),"PROPRIETAIRE");
     }
 
 }

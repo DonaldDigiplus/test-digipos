@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface AppUserMetier {
     AppUserDTO saveUser(AppUserDTO appUserDTO);
-    AppUserDTO updateUser(AppUserDTO appUserDTO);
+    AppUserDTO updateUser(Long id_user, AppUserDTO appUserDTO);
     AppUserDTO getUser(Long id_user);
     AppUser findUserById(Long id_user);
     AppUser getUserByLogin(String login);

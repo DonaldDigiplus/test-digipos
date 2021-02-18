@@ -45,6 +45,8 @@ public class AppUserSercice implements AppUserMetier {
             clientPOS.setClient(true);
 
             appRoleService.addRoleToUser(clientPOS.getId_user(), "CLIENT");
+
+            BeanUtils.copyProperties(clientPOS, appUserDTO);
         } else if(appUserDTO.isAdmin()){
             Admin admin = new Admin();
 
@@ -57,6 +59,8 @@ public class AppUserSercice implements AppUserMetier {
             appRoleService.addRoleToUser(admin.getId_user(), "VENDEUR");
             appRoleService.addRoleToUser(admin.getId_user(), "SUPPORT");
             appRoleService.addRoleToUser(admin.getId_user(), "CLIENT");
+
+            BeanUtils.copyProperties(admin, appUserDTO);
         } else if (appUserDTO.isSupport()){
             Support support = new Support();
 
@@ -68,6 +72,8 @@ public class AppUserSercice implements AppUserMetier {
             appRoleService.addRoleToUser(support.getId_user(), "VENDEUR");
             appRoleService.addRoleToUser(support.getId_user(), "SUPPORT");
             appRoleService.addRoleToUser(support.getId_user(), "CLIENT");
+
+            BeanUtils.copyProperties(support, appUserDTO);
         } else if(appUserDTO.isProprietaire()){
             Proprietaire proprietaire = new Proprietaire();
 
@@ -78,6 +84,8 @@ public class AppUserSercice implements AppUserMetier {
             appRoleService.addRoleToUser(proprietaire.getId_user(), "PROPRIETAIRE");
             appRoleService.addRoleToUser(proprietaire.getId_user(), "VENDEUR");
             appRoleService.addRoleToUser(proprietaire.getId_user(), "CLIENT");
+
+            BeanUtils.copyProperties(proprietaire, appUserDTO);
         } else if(appUserDTO.isVendeur()){
             Vendeur vendeur = new Vendeur();
 
@@ -87,6 +95,8 @@ public class AppUserSercice implements AppUserMetier {
 
             appRoleService.addRoleToUser(vendeur.getId_user(), "VENDEUR");
             appRoleService.addRoleToUser(vendeur.getId_user(), "CLIENT");
+
+            BeanUtils.copyProperties(vendeur, appUserDTO);
         } else if(!appUserDTO.isAdmin() && !appUserDTO.isSupport() && !appUserDTO.isProprietaire()
                 && !appUserDTO.isVendeur() && !appUserDTO.isClient()){
             AppUser appUser = new AppUser();
@@ -95,20 +105,49 @@ public class AppUserSercice implements AppUserMetier {
             appUser = appUserRepository.save(appUser);
             appUser.setStaff(true);
 
-            appRoleService.addRoleToUser(appUser.getId_user(), "SUPERADMIN");
-            appRoleService.addRoleToUser(appUser.getId_user(), "ADMIN");
-            appRoleService.addRoleToUser(appUser.getId_user(), "PROPRIETAIRE");
-            appRoleService.addRoleToUser(appUser.getId_user(), "VENDEUR");
-            appRoleService.addRoleToUser(appUser.getId_user(), "SUPPORT");
-            appRoleService.addRoleToUser(appUser.getId_user(), "CLIENT");
+            BeanUtils.copyProperties(appUser, appUserDTO);
         }
 
         return appUserDTO;
     }
 
     @Override
-    public AppUserDTO updateUser(AppUserDTO appUserDTO) {
+    public AppUserDTO updateUser(Long id_user, AppUserDTO appUserDTO) {
+
+        if(appUserDTO.isClient()){
+            ClientPOS clientPOS = clientRepository.getOne(id_user);
+            this.updateProccess(clientPOS, appUserDTO);
+        } else if(appUserDTO.isAdmin()){
+            Admin admin = adminRepository.getOne(id_user);
+            this.updateProccess(admin, appUserDTO);
+        } else if (appUserDTO.isSupport()){
+            Support support = supportRepository.getOne(id_user);
+            this.updateProccess(support, appUserDTO);
+        } else if(appUserDTO.isProprietaire()){
+            Proprietaire proprietaire = proprietaireRepository.getOne(id_user);
+            this.updateProccess(proprietaire, appUserDTO);
+        } else if(appUserDTO.isVendeur()){
+            Vendeur vendeur = vendeurRepository.getOne(id_user);
+            this.updateProccess(vendeur, appUserDTO);
+        }
+
         return null;
+    }
+
+    void updateProccess (AppUser user, AppUserDTO appUserDTO){
+        if (!appUserDTO.getPhone().equalsIgnoreCase("")) {
+            user.setPhone(appUserDTO.getPhone());
+        }
+        if (!appUserDTO.getEmail().equalsIgnoreCase("")) {
+            user.setEmail(appUserDTO.getEmail());
+        }
+        if (!appUserDTO.getUsername().equalsIgnoreCase("")) {
+            user.setUsername(appUserDTO.getUsername());
+        }
+        user.setFirstName(appUserDTO.getFirstName());
+        user.setLastName(appUserDTO.getLastName());
+        user.setPhotouser(appUserDTO.getPhotouser());
+        user.setCni(appUserDTO.getCni());
     }
 
     @Override
