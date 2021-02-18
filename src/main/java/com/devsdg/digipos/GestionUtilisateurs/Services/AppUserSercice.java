@@ -7,10 +7,14 @@ import com.devsdg.digipos.GestionUtilisateurs.Repositories.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Transactional
 @Service
@@ -117,20 +121,24 @@ public class AppUserSercice implements AppUserMetier {
         if(appUserDTO.isClient()){
             ClientPOS clientPOS = clientRepository.getOne(id_user);
             this.updateProccess(clientPOS, appUserDTO);
+            return this.permuteAppUserToAppUserDTO(clientPOS);
         } else if(appUserDTO.isAdmin()){
             Admin admin = adminRepository.getOne(id_user);
             this.updateProccess(admin, appUserDTO);
+            return this.permuteAppUserToAppUserDTO(admin);
         } else if (appUserDTO.isSupport()){
             Support support = supportRepository.getOne(id_user);
             this.updateProccess(support, appUserDTO);
+            return this.permuteAppUserToAppUserDTO(support);
         } else if(appUserDTO.isProprietaire()){
             Proprietaire proprietaire = proprietaireRepository.getOne(id_user);
             this.updateProccess(proprietaire, appUserDTO);
+            return this.permuteAppUserToAppUserDTO(proprietaire);
         } else if(appUserDTO.isVendeur()){
             Vendeur vendeur = vendeurRepository.getOne(id_user);
             this.updateProccess(vendeur, appUserDTO);
+            return this.permuteAppUserToAppUserDTO(vendeur);
         }
-
         return null;
     }
 
@@ -152,12 +160,12 @@ public class AppUserSercice implements AppUserMetier {
 
     @Override
     public AppUserDTO getUser(Long id_user) {
-        return null;
+        return this.permuteAppUserToAppUserDTO(appUserRepository.getOne(id_user));
     }
 
     @Override
     public AppUser findUserById(Long id_user) {
-        return null;
+        return appUserRepository.getOne(id_user);
     }
 
     @Override
@@ -166,17 +174,43 @@ public class AppUserSercice implements AppUserMetier {
     }
 
     @Override
-    public Page<AppUserDTO> getAllUsers(Pageable pageable) {
-        return null;
+    public Page<AppUser> getAllUsers(Pageable pageable) {
+        return appUserRepository.findAll(pageable);
     }
 
     @Override
     public boolean activeUser(Long id_user) {
-        return false;
+        AppUser user = appUserRepository.getOne(id_user);
+        if(!user.isAtiveuser()){
+            user.setAtiveuser(true);
+            return true;
+        } else
+            return user.isAtiveuser();
     }
 
     @Override
     public boolean desactiveUser(Long id_user) {
-        return false;
+        AppUser user = appUserRepository.getOne(id_user);
+        if(!user.isAtiveuser()){
+            user.setAtiveuser(false);
+            return true;
+        } else
+            return user.isAtiveuser();
+    }
+
+    static AppUserDTO permuteAppUserToAppUserDTO(AppUser user){
+        AppUserDTO appUserDTO = new AppUserDTO();
+        BeanUtils.copyProperties(user, appUserDTO);
+        return appUserDTO;
+    }
+
+    static List<AppUserDTO> permuteAppUserListToAppUserDTOList(List<AppUser> users){
+        List<AppUserDTO> appUserDTOList = new ArrayList<>();
+        users.forEach(r->{
+            AppUserDTO appUserDTO = new AppUserDTO();
+            BeanUtils.copyProperties(r, appUserDTO);
+            appUserDTOList.add(appUserDTO);
+        });
+        return appUserDTOList;
     }
 }

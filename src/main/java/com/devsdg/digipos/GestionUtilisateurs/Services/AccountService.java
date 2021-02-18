@@ -28,12 +28,13 @@ public class AccountService implements AccountMetier {
     }
 
     @Override
-    public AppUserDTO ConnectAccount(String login, Long id_shop) {
-        return null;
+    public AppUserDTO ConnectAccount(String login) {
+        AppUser user = appUserSercice.getUserByLogin(login);
+        if(user==null)
+            throw new ErrorMessages("Utilisateur introuvable", HttpStatus.NOT_FOUND);
+
+        return AppUserSercice.permuteAppUserToAppUserDTO(user);
     }
 
-    @Override
-    public boolean DeconnectAccount(Long id_user) {
-        return false;
-    }
+
 }
