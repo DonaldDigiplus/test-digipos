@@ -38,7 +38,7 @@ public class AppUserSercice implements AppUserMetier {
 
     @Override
     public AppUserDTO saveUser(AppUserDTO appUserDTO) {
-        String hashpw=bCryptPasswordEncoder.encode(appUserDTO.getPassword());
+        String hashpw=bCryptPasswordEncoder.encode("123456789");
         appUserDTO.setPassword(hashpw);
 
         if(appUserDTO.isClient()){
@@ -175,6 +175,11 @@ public class AppUserSercice implements AppUserMetier {
     @Override
     public Page<AppUser> getAllUsers(Pageable pageable) {
         return appUserRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<AppUser> findAllByStaffIsTrue(Pageable pageable) {
+        return appUserRepository.findAllByStaffIsTrue(pageable);
     }
 
     @Override

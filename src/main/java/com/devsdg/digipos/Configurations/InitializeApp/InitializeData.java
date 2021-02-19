@@ -22,7 +22,7 @@ public class InitializeData {
         AppUserDTO user= appUserMetier.saveUser(new AppUserDTO("root","1234","digiplusproject@gmail.com","6"));
         if(user!=null){
             //Creation des role
-            appRoleMetier.saveRole(new AppRoleDTO("SUPERADMIN"));
+            appRoleMetier.saveRole(new AppRoleDTO("SUPPORT"));
             appRoleMetier.saveRole(new AppRoleDTO("ADMIN"));
             appRoleMetier.saveRole(new AppRoleDTO("CLIENT"));
             appRoleMetier.saveRole(new AppRoleDTO("VENDEUR"));
@@ -30,7 +30,7 @@ public class InitializeData {
             //Affectation des roles au superadmin
             appRoleMetier.addRoleToUser(user.getId_user(),"CLIENT");
             appRoleMetier.addRoleToUser(user.getId_user(),"ADMIN");
-            appRoleMetier.addRoleToUser(user.getId_user(),"SUPERADMIN");
+            appRoleMetier.addRoleToUser(user.getId_user(),"SUPPORT");
             appRoleMetier.addRoleToUser(user.getId_user(),"VENDEUR");
             appRoleMetier.addRoleToUser(user.getId_user(),"PROPRIETAIRE");
         } else

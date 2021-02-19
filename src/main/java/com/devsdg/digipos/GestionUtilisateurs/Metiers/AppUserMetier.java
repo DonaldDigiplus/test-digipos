@@ -12,6 +12,7 @@ public interface AppUserMetier {
     AppUser findUserById(Long id_user);
     AppUser getUserByLogin(String login);
     Page<AppUser> getAllUsers(Pageable pageable);
+    Page<AppUser> findAllByStaffIsTrue(Pageable pageable);
     boolean activeUser(Long id_user);
     boolean desactiveUser(Long id_user);
 }
