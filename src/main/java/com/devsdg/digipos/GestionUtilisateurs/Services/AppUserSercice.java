@@ -38,8 +38,15 @@ public class AppUserSercice implements AppUserMetier {
 
     @Override
     public AppUserDTO saveUser(AppUserDTO appUserDTO) {
-        String hashpw=bCryptPasswordEncoder.encode("123456789");
-        appUserDTO.setPassword(hashpw);
+        if (appUserDTO.getPassword()==null){
+            String hashpw=bCryptPasswordEncoder.encode("123456789");
+            appUserDTO.setPassword(hashpw);
+        }else {
+            String hashpw=bCryptPasswordEncoder.encode("123456789");
+            appUserDTO.setPassword(hashpw);
+        }
+
+
 
         if(appUserDTO.isClient()){
             ClientPOS clientPOS = new ClientPOS();
@@ -116,26 +123,26 @@ public class AppUserSercice implements AppUserMetier {
     }
 
     @Override
-    public AppUserDTO updateUser(Long id_user, AppUserDTO appUserDTO) {
+    public AppUserDTO updateUser(AppUserDTO appUserDTO) {
 
         if(appUserDTO.isClient()){
-            ClientPOS clientPOS = clientRepository.getOne(id_user);
+            ClientPOS clientPOS = clientRepository.getOne(appUserDTO.getId_user());
             this.updateProccess(clientPOS, appUserDTO);
             return permuteAppUserToAppUserDTO(clientPOS);
         } else if(appUserDTO.isAdmin()){
-            Admin admin = adminRepository.getOne(id_user);
+            Admin admin = adminRepository.getOne(appUserDTO.getId_user());
             this.updateProccess(admin, appUserDTO);
             return permuteAppUserToAppUserDTO(admin);
         } else if (appUserDTO.isSupport()){
-            Support support = supportRepository.getOne(id_user);
+            Support support = supportRepository.getOne(appUserDTO.getId_user());
             this.updateProccess(support, appUserDTO);
             return permuteAppUserToAppUserDTO(support);
         } else if(appUserDTO.isProprietaire()){
-            Proprietaire proprietaire = proprietaireRepository.getOne(id_user);
+            Proprietaire proprietaire = proprietaireRepository.getOne(appUserDTO.getId_user());
             this.updateProccess(proprietaire, appUserDTO);
             return permuteAppUserToAppUserDTO(proprietaire);
         } else if(appUserDTO.isVendeur()){
-            Vendeur vendeur = vendeurRepository.getOne(id_user);
+            Vendeur vendeur = vendeurRepository.getOne(appUserDTO.getId_user());
             this.updateProccess(vendeur, appUserDTO);
             return permuteAppUserToAppUserDTO(vendeur);
         }

@@ -19,11 +19,12 @@ public class AppUserDTO {
     public AppUserDTO() {
     }
 
-    public AppUserDTO(String username,String password, String email, String phone) {
+    public AppUserDTO(String username,String password, String email, String phone,boolean isAdmin) {
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.isAdmin=true;
     }
 
     public Long getId_user() {
