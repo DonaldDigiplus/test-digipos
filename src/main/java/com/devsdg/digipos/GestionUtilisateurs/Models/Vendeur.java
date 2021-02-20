@@ -7,4 +7,13 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name = "id_user")
 public class Vendeur extends ShopUser{
 
+    private boolean activevendeur=true;
+
+    public boolean isActivevendeur() {
+        return activevendeur;
+    }
+
+    public void setActivevendeur(boolean activevendeur) {
+        this.activevendeur = activevendeur;
+    }
 }

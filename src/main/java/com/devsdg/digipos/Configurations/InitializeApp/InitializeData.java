@@ -12,10 +12,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InitializeData {
-
+    @Autowired
+    private AppUserMetier appUserMetier;
+    @Autowired
+    private AppRoleMetier appRoleMetier;
 
     @Bean
     void initializeSuperAdmin() {
+        appRoleMetier.saveRole(new AppRoleDTO("ADMIN"));
+        appRoleMetier.saveRole(new AppRoleDTO("SUPPORT"));
+        appRoleMetier.saveRole(new AppRoleDTO("PROPRIETAIRE"));
+        appRoleMetier.saveRole(new AppRoleDTO("VENDEUR"));
+        appRoleMetier.saveRole(new AppRoleDTO("CLIENT"));
+        AppUserDTO user = appUserMetier.saveUser(new AppUserDTO("root", "1234", "digiplusproject@gmail.com", "6", true));
+        if (user == null) {
+            throw new ErrorMessages("L'utilisateur n'a pas ete cree.", HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

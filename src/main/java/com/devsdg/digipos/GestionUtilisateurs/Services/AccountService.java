@@ -2,10 +2,15 @@ package com.devsdg.digipos.GestionUtilisateurs.Services;
 
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
+import com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordDTO.PasswordResetRequestModel;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AccountMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
+import com.devsdg.digipos.GestionUtilisateurs.Models.PasswordResetTokenEntity;
+import com.devsdg.digipos.GestionUtilisateurs.Repositories.PasswordResetTokenRepository;
+import com.devsdg.digipos.GestionUtilisateurs.Services.Commons.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService implements AccountMetier {
     @Autowired
     AppUserSercice appUserSercice;
+    @Autowired
+    PasswordResetTokenRepository passwordResetTokenRepository;
+    @Autowired
+    private Utils utils;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public AppUserDTO RegisterAccount(AppUserDTO appUserDTO) {
@@ -36,5 +47,55 @@ public class AccountService implements AccountMetier {
         return AppUserSercice.permuteAppUserToAppUserDTO(user);
     }
 
+    @Override
+    public PasswordResetTokenEntity requestPasswordReset(String email) {
+        AppUser userEntity = appUserSercice.getUserByLogin(email);
+        System.out.println("Requete utilisateur : .................." + email);
+
+        if (userEntity==null){
+            throw new ErrorMessages("Cette email ne correspond à aucun utilisateur", HttpStatus.NOT_FOUND);
+        }
+        System.out.println("Récupération de l'utilisateur ..................");
+
+        String token = Utils.generatePasswordResetToken(userEntity.getId_user().toString());
+
+        PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+        passwordResetTokenEntity.setToken(token);
+        passwordResetTokenEntity.setUserdetails(userEntity);
+        passwordResetTokenRepository.save(passwordResetTokenEntity);
+
+        return passwordResetTokenEntity;
+    }
+
+    @Override
+    public boolean resetPassword(PasswordResetRequestModel passwordResetRequestModel) {
+        boolean returnValue = false;
+        PasswordResetTokenEntity passwordResetTokenEntity = passwordResetTokenRepository.findByToken(passwordResetRequestModel.getToken());
+        if (passwordResetTokenEntity == null) {
+            return returnValue;
+        }
+        if (utils.hasTokenExpired(passwordResetRequestModel.getToken())) {
+            return returnValue;
+        }
+
+        String encryptedPassword = bCryptPasswordEncoder.encode(passwordResetRequestModel.getPassword());
+        AppUser userEntity = appUserSercice.findUserById(passwordResetTokenEntity.getUserdetails().getId_user());
+
+        if (userEntity==null) throw new ErrorMessages("Utilisateur introuvable, Rééssayer svp !!!", HttpStatus.NOT_FOUND);
+
+        userEntity.setPassword(encryptedPassword);
+        AppUser savedUserEntity = appUserSercice.saveAppuser(userEntity);
+
+        if (savedUserEntity != null && encryptedPassword.equals(savedUserEntity.getPassword())) {
+            returnValue = true;
+        }
+
+        passwordResetTokenRepository.delete(passwordResetTokenEntity);
+
+        // returnValue = notificationService.sendNotification(userEntity.getEmail(), PASSWORD_RESET_HTMLBODY.replace("$newpassword", passwordResetRequestModel.getPassword()) , "Digiplus : Password Reset");
+        // returnValue = myAuthentication.sendMail(userEntity.getEmail(), EmailModel.passwordChange(userEntity.getFirstName(), passwordResetRequestModel.getPassword()) , "Mot de passe réinitialisé avec succès");
+
+        return returnValue;
+    }
 
 }

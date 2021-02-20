@@ -10,6 +10,8 @@ public class SecurityConstant {
     public static final String TOKEN_PREFIX="Bearer ";
     public static final String HEADER_STRING="Authorization";
 
+    public static final long RESET_PASSWORD_EXPIRATION_TIME = 3600000; //1 Hours
+
     public static String getTokenSecret() {
         AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties");
         System.out.println("------------------------Key : "+appProperties.getTokenSecret());

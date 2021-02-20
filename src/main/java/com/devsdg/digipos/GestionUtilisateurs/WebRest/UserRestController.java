@@ -3,11 +3,10 @@ package com.devsdg.digipos.GestionUtilisateurs.WebRest;
 
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
-import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
+import com.devsdg.digipos.GestionUtilisateurs.Models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
@@ -26,4 +25,68 @@ public class UserRestController {
         return userMetier.updateUser(user);
     }
 
+    @GetMapping("/getuser/{id_user}")
+    public AppUserDTO getUser(@PathVariable Long id_user){
+        return userMetier.getUser(id_user);
+    }
+
+    @GetMapping("/getalladmins")
+    public Page<Admin> getAllAdmins(Pageable pageable){
+        return userMetier.getAllAdmins(pageable);
+    }
+
+    @GetMapping("/getalladminsisactive")
+    public Page<Admin> getAllAdminsIsActive(Pageable pageable){
+        return userMetier.getAllAdminsIsActive(pageable);
+    }
+
+    @GetMapping("/getallsupports")
+    public Page<Support> getAllSupports(Pageable pageable){
+        return userMetier.getAllSupports(pageable);
+    }
+
+    @GetMapping("/getallsupportsisactive")
+    public Page<Support> getAllSupportsIsActive(Pageable pageable){
+        return userMetier.getAllSupportsIsActive(pageable);
+    }
+
+    @GetMapping("/getallproprietaires")
+    public Page<Proprietaire> getAllProprietaires(Pageable pageable){
+        return userMetier.getAllProprietaires(pageable);
+    }
+
+    @GetMapping("/getallproprietairesisactive")
+    public Page<Proprietaire> getAllProprietairesIsActive(Pageable pageable){
+        return userMetier.getAllProprietairesIsActive(pageable);
+    }
+
+    @GetMapping("/getallvendeurs")
+    public Page<Vendeur> getAllVendeurs(Pageable pageable){
+        return userMetier.getAllVendeurs(pageable);
+    }
+
+    @GetMapping("/getallvendeursisactive")
+    public Page<Vendeur> getAllVendeursIsActive(Pageable pageable){
+        return userMetier.getAllVendeursIsActive(pageable);
+    }
+
+    @GetMapping("/getallclients")
+    public Page<ClientPOS> getAllClientPOS(Pageable pageable){
+        return userMetier.getAllClientPOSs(pageable);
+    }
+
+    @GetMapping("/getallclientsisactive")
+    public Page<ClientPOS> getAllClientPOSIsActive(Pageable pageable){
+        return userMetier.getAllClientPOSsIsActive(pageable);
+    }
+
+    @PostMapping("/active_user/{id_user}")
+    public boolean activeUser(@PathVariable Long id_user){
+        return userMetier.activeUser(id_user);
+    }
+
+    @PostMapping("/desactive_user/{id_user}")
+    public boolean desactiveUser(@PathVariable Long id_user){
+        return userMetier.desactiveUser(id_user);
+    }
 }

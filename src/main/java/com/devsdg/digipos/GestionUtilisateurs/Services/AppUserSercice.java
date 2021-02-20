@@ -1,5 +1,8 @@
 package com.devsdg.digipos.GestionUtilisateurs.Services;
 
+import com.devsdg.digipos.Commons.GeneratorTools.Exceptions.AlgorithmException;
+import com.devsdg.digipos.Commons.GeneratorTools.Voucher.VoucherGenerator;
+import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Models.*;
@@ -7,8 +10,8 @@ import com.devsdg.digipos.GestionUtilisateurs.Repositories.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,17 +39,18 @@ public class AppUserSercice implements AppUserMetier {
     @Autowired
     private AppRoleService appRoleService;
 
+
+
     @Override
     public AppUserDTO saveUser(AppUserDTO appUserDTO) {
-        if (appUserDTO.getPassword()==null){
-            String hashpw=bCryptPasswordEncoder.encode("123456789");
+
+        if (appUserDTO.getPassword()!=null || !appUserDTO.getPassword().isEmpty()){
+            String hashpw=bCryptPasswordEncoder.encode(appUserDTO.getPassword());
             appUserDTO.setPassword(hashpw);
         }else {
-            String hashpw=bCryptPasswordEncoder.encode("123456789");
+            String hashpw=bCryptPasswordEncoder.encode(generatePassword());
             appUserDTO.setPassword(hashpw);
         }
-
-
 
         if(appUserDTO.isClient()){
             ClientPOS clientPOS = new ClientPOS();
@@ -124,7 +128,6 @@ public class AppUserSercice implements AppUserMetier {
 
     @Override
     public AppUserDTO updateUser(AppUserDTO appUserDTO) {
-
         if(appUserDTO.isClient()){
             ClientPOS clientPOS = clientRepository.getOne(appUserDTO.getId_user());
             this.updateProccess(clientPOS, appUserDTO);
@@ -156,9 +159,6 @@ public class AppUserSercice implements AppUserMetier {
         if (!appUserDTO.getEmail().equalsIgnoreCase("")) {
             user.setEmail(appUserDTO.getEmail());
         }
-        if (!appUserDTO.getUsername().equalsIgnoreCase("")) {
-            user.setUsername(appUserDTO.getUsername());
-        }
         user.setNomcomplet(appUserDTO.getNomcomplet());
         user.setPhotouser(appUserDTO.getPhotouser());
         user.setCni(appUserDTO.getCni());
@@ -182,6 +182,56 @@ public class AppUserSercice implements AppUserMetier {
     @Override
     public Page<AppUser> getAllUsers(Pageable pageable) {
         return appUserRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Admin> getAllAdmins(Pageable pageable) {
+        return adminRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Admin> getAllAdminsIsActive(Pageable pageable) {
+        return adminRepository.findAllByAtiveuserIsTrue(pageable);
+    }
+
+    @Override
+    public Page<Support> getAllSupports(Pageable pageable) {
+        return supportRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Support> getAllSupportsIsActive(Pageable pageable) {
+        return supportRepository.findAllByAtiveuserIsTrue(pageable);
+    }
+
+    @Override
+    public Page<Proprietaire> getAllProprietaires(Pageable pageable) {
+        return proprietaireRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Proprietaire> getAllProprietairesIsActive(Pageable pageable) {
+        return proprietaireRepository.findAllByAtiveuserIsTrue(pageable);
+    }
+
+    @Override
+    public Page<Vendeur> getAllVendeurs(Pageable pageable) {
+        return vendeurRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Vendeur> getAllVendeursIsActive(Pageable pageable) {
+        return vendeurRepository.findAllByAtiveuserIsTrue(pageable);
+    }
+
+    @Override
+    public Page<ClientPOS> getAllClientPOSs(Pageable pageable) {
+        return clientRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<ClientPOS> getAllClientPOSsIsActive(Pageable pageable) {
+        return clientRepository.findAllByAtiveuserIsTrue(pageable);
     }
 
     @Override
@@ -223,5 +273,19 @@ public class AppUserSercice implements AppUserMetier {
             appUserDTOList.add(appUserDTO);
         });
         return appUserDTOList;
+    }
+
+    static String generatePassword(){
+        try {
+            VoucherGenerator voucherGenerator = VoucherGenerator.getVoucherGenerator(2);
+            voucherGenerator.generate(1);
+            if(!voucherGenerator.getCodes().isEmpty()){
+                return voucherGenerator.getCodes().get(0);
+            } else
+                return "";
+        } catch (AlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

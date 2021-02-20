@@ -11,13 +11,13 @@ public class AppUserDTO {
     private String nomcomplet;
     private String cni;
     private String photouser;
+    private Date date;
     private boolean client;
     private boolean staff;
     private boolean isAdmin;
     private boolean isProprietaire;
     private boolean isVendeur;
     private boolean isSupport;
-    private Date date = new Date();
 
     public AppUserDTO() {
     }
@@ -94,6 +94,14 @@ public class AppUserDTO {
         this.photouser = photouser;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public boolean isStaff() {
         return staff;
     }
@@ -142,11 +150,4 @@ public class AppUserDTO {
         isSupport = support;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 }
