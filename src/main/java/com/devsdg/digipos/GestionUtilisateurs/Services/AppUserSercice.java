@@ -7,6 +7,7 @@ import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Models.*;
 import com.devsdg.digipos.GestionUtilisateurs.Repositories.*;
+import org.junit.Assert;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -244,23 +245,13 @@ public class AppUserSercice implements AppUserMetier {
     }
 
     @Override
-    public boolean activeUser(Long id_user) {
+    public boolean active_and_desactive_user(Long id_user) {
         AppUser user = appUserRepository.getOne(id_user);
-        if(!user.isAtiveuser()){
-            user.setAtiveuser(true);
-            return true;
-        } else
-            return user.isAtiveuser();
-    }
 
-    @Override
-    public boolean desactiveUser(Long id_user) {
-        AppUser user = appUserRepository.getOne(id_user);
-        if(!user.isAtiveuser()){
-            user.setAtiveuser(false);
-            return true;
-        } else
-            return user.isAtiveuser();
+        Assert.assertNotNull(user);
+        user.setAtiveuser(!user.isAtiveuser());
+
+        return user.isAtiveuser();
     }
 
     static AppUserDTO permuteAppUserToAppUserDTO(AppUser user){

@@ -1,8 +1,10 @@
 package com.devsdg.digipos.GestionUtilisateurs.Services;
 
+import com.devsdg.digipos.GestionEmail.Format.EmailModel;
+import com.devsdg.digipos.GestionEmail.Service.MyAuthentication;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
-import com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordDTO.PasswordResetRequestModel;
+import com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordResetRequestModel;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AccountMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
 import com.devsdg.digipos.GestionUtilisateurs.Models.PasswordResetTokenEntity;
@@ -25,6 +27,8 @@ public class AccountService implements AccountMetier {
     private Utils utils;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private MyAuthentication myAuthentication;
 
     @Override
     public AppUserDTO RegisterAccount(AppUserDTO appUserDTO) {
@@ -63,6 +67,10 @@ public class AccountService implements AccountMetier {
         passwordResetTokenEntity.setToken(token);
         passwordResetTokenEntity.setUserdetails(userEntity);
         passwordResetTokenRepository.save(passwordResetTokenEntity);
+        //Envoie du mail
+        myAuthentication.sendMail(userEntity.getEmail(), EmailModel.resetPassword(userEntity.getNomcomplet(), userEntity.getId_user(), token), "Réinitialisation du mot de passe");
+        //send sms
+        //smsApiService.smsAuthentification(userEntity.getPhone(), Detail.WebAppUrl +"/resetpassword/"+userEntity.getId_user()+"/"+token);
 
         return passwordResetTokenEntity;
     }
@@ -93,9 +101,23 @@ public class AccountService implements AccountMetier {
         passwordResetTokenRepository.delete(passwordResetTokenEntity);
 
         // returnValue = notificationService.sendNotification(userEntity.getEmail(), PASSWORD_RESET_HTMLBODY.replace("$newpassword", passwordResetRequestModel.getPassword()) , "Digiplus : Password Reset");
-        // returnValue = myAuthentication.sendMail(userEntity.getEmail(), EmailModel.passwordChange(userEntity.getFirstName(), passwordResetRequestModel.getPassword()) , "Mot de passe réinitialisé avec succès");
+         returnValue = myAuthentication.sendMail(userEntity.getEmail(), EmailModel.passwordChange(userEntity.getNomcomplet(), passwordResetRequestModel.getPassword()) , "Mot de passe réinitialisé avec succès");
 
         return returnValue;
+    }
+
+    @Override
+    public boolean renewPassword(Long idUser, String pass) {
+        AppUser user = appUserSercice.findUserById(idUser);
+        if(user==null)
+            throw new ErrorMessages("L'utilisateur entrer n'existe pas.", HttpStatus.NOT_FOUND);
+        if(!pass.equals("")){
+            String encryptedPassword = bCryptPasswordEncoder.encode(pass);
+            user.setPassword(encryptedPassword);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

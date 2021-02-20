@@ -24,6 +24,5 @@ public interface AppUserMetier {
     Page<ClientPOS> getAllClientPOSs(Pageable pageable);
     Page<ClientPOS> getAllClientPOSsIsActive(Pageable pageable);
     Page<AppUser> findAllByStaffIsTrue(Pageable pageable);
-    boolean activeUser(Long id_user);
-    boolean desactiveUser(Long id_user);
+    boolean active_and_desactive_user(Long id_user);
 }

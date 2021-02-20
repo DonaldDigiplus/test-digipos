@@ -2,21 +2,14 @@ package com.devsdg.digipos.GestionUtilisateurs.WebRest;
 
 
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
-import com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordDTO.PasswordResetRequestModel;
+import com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordResetRequestModel;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AccountMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
-import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
 import com.devsdg.digipos.GestionUtilisateurs.Models.PasswordResetTokenEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @CrossOrigin("*")
 @RestController
@@ -53,6 +46,11 @@ public class AccountRestController {
     )
     public boolean resetPassword(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
         return accountMetier.resetPassword(passwordResetRequestModel);
+    }
+
+    @PostMapping("/renew-pass")
+    public boolean renewPass(@RequestBody PasswordResetRequestModel passwordResetRequestModel){
+        return accountMetier.renewPassword(passwordResetRequestModel.getId(), passwordResetRequestModel.getPassword());
     }
 
 }
