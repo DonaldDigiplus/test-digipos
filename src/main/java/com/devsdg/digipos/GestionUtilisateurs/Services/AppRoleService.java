@@ -31,7 +31,7 @@ public class AppRoleService implements AppRoleMetier {
         if(role==null){
             AppRole appRole = appRoleRepository.save(new AppRole(appRoleDTO.getRolename()));
 
-            //Assert.assertNotNull(appRole);
+            Assert.assertNotNull(appRole);
             return this.permuteAppRoleToAppRoleDTO(appRole);
         } else
             throw new ErrorMessages("Le role que vous essayer d'enregistrer existe deja.", HttpStatus.CONFLICT);

@@ -12,30 +12,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InitializeData {
-    @Autowired
-    private AppUserMetier  appUserMetier;
-    @Autowired
-    private AppRoleMetier appRoleMetier;
+
 
     @Bean
-    void initializeSuperAdmin(){
-        AppUserDTO user= appUserMetier.saveUser(new AppUserDTO("root","1234","digiplusproject@gmail.com","6",true));
-        if(user!=null){
-            //Creation des role
-            appRoleMetier.saveRole(new AppRoleDTO("ADMIN"));
-            appRoleMetier.saveRole(new AppRoleDTO("SUPPORT"));
-            appRoleMetier.saveRole(new AppRoleDTO("PROPRIETAIRE"));
-            appRoleMetier.saveRole(new AppRoleDTO("VENDEUR"));
-            appRoleMetier.saveRole(new AppRoleDTO("CLIENT"));
-            //Affectation des roles au superadmin
-           /* appRoleMetier.addRoleToUser(user.getId_user(),"CLIENT");
-            appRoleMetier.addRoleToUser(user.getId_user(),"ADMIN");
-            appRoleMetier.addRoleToUser(user.getId_user(),"SUPPORT");
-            appRoleMetier.addRoleToUser(user.getId_user(),"VENDEUR");
-            appRoleMetier.addRoleToUser(user.getId_user(),"PROPRIETAIRE");*/
-        } else
-            throw new ErrorMessages("L'utilisateur n'a pas ete cree.", HttpStatus.BAD_REQUEST);
-
+    void initializeSuperAdmin() {
     }
 
 }

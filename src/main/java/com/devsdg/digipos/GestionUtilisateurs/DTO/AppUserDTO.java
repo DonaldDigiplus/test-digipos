@@ -1,5 +1,7 @@
 package com.devsdg.digipos.GestionUtilisateurs.DTO;
 
+import java.util.Date;
+
 public class AppUserDTO {
     private Long id_user;
     private String username;
@@ -15,6 +17,7 @@ public class AppUserDTO {
     private boolean isProprietaire;
     private boolean isVendeur;
     private boolean isSupport;
+    private Date date = new Date();
 
     public AppUserDTO() {
     }
@@ -137,5 +140,13 @@ public class AppUserDTO {
 
     public void setSupport(boolean support) {
         isSupport = support;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
