@@ -18,6 +18,7 @@ public class AppUserDTO {
     private boolean isProprietaire;
     private boolean isVendeur;
     private boolean isSupport;
+    private boolean ativeuser;
 
     public AppUserDTO() {
     }
@@ -150,4 +151,11 @@ public class AppUserDTO {
         isSupport = support;
     }
 
+    public boolean isAtiveuser() {
+        return ativeuser;
+    }
+
+    public void setAtiveuser(boolean ativeuser) {
+        this.ativeuser = ativeuser;
+    }
 }
