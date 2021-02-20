@@ -2,10 +2,13 @@ package com.devsdg.digipos.GestionUtilisateurs.WebRest;
 
 
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
+import com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordDTO.PasswordResetRequestModel;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AccountMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
+import com.devsdg.digipos.GestionUtilisateurs.Models.PasswordResetTokenEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -34,6 +37,22 @@ public class AccountRestController {
         return accountMetier.ConnectAccount(login);
     }
 
-
+    @PostMapping(
+            path = "/password-request",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public PasswordResetTokenEntity requestPasswordReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+        System.out.println("Requete en cours ..................");
+        return accountMetier.requestPasswordReset(passwordResetRequestModel.getEmail());
+    }
+    @PostMapping(
+            path = "/password-reset",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public boolean resetPassword(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+        return accountMetier.resetPassword(passwordResetRequestModel);
+    }
 
 }

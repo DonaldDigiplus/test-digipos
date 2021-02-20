@@ -40,6 +40,10 @@ public class AppUserSercice implements AppUserMetier {
     private AppRoleService appRoleService;
 
 
+    @Override
+    public AppUser saveAppuser(AppUser appUser) {
+        return appUserRepository.save(appUser);
+    }
 
     @Override
     public AppUserDTO saveUser(AppUserDTO appUserDTO) {
