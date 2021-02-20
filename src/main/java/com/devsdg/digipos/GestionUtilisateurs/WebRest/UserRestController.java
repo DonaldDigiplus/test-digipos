@@ -80,13 +80,9 @@ public class UserRestController {
         return userMetier.getAllClientPOSsIsActive(pageable);
     }
 
-    @PostMapping("/active_user/{id_user}")
-    public boolean activeUser(@PathVariable Long id_user){
-        return userMetier.activeUser(id_user);
+    @GetMapping("/active_desactive_user/{id_user}")
+    public boolean active_desactive_user(@PathVariable Long id_user){
+        return userMetier.active_and_desactive_user(id_user);
     }
 
-    @PostMapping("/desactive_user/{id_user}")
-    public boolean desactiveUser(@PathVariable Long id_user){
-        return userMetier.desactiveUser(id_user);
-    }
 }

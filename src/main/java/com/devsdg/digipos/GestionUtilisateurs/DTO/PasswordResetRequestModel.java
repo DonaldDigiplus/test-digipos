@@ -1,4 +1,6 @@
-package com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordDTO;
+package com.devsdg.digipos.GestionUtilisateurs.DTO;
+
+import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
 
 public class PasswordResetRequestModel {
 
@@ -6,6 +8,7 @@ public class PasswordResetRequestModel {
     private String password;
     private String token;
     private String email;
+    private AppUser userdetails;
 
     public Long getId() {
         return id;
@@ -37,5 +40,13 @@ public class PasswordResetRequestModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public AppUser getUserdetails() {
+        return userdetails;
+    }
+
+    public void setUserdetails(AppUser userdetails) {
+        this.userdetails = userdetails;
     }
 }
