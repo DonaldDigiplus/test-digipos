@@ -1,5 +1,7 @@
 package com.devsdg.digipos.GestionUtilisateurs.DTO;
 
+import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
+
 import java.util.Date;
 
 public class AppUserDTO {
@@ -18,6 +20,7 @@ public class AppUserDTO {
     private boolean isProprietaire;
     private boolean isVendeur;
     private boolean isSupport;
+    private String nomBoutique;
 
     public AppUserDTO() {
     }
@@ -150,4 +153,11 @@ public class AppUserDTO {
         isSupport = support;
     }
 
+    public String getNomBoutique() {
+        return nomBoutique;
+    }
+
+    public void setNomBoutique(String nomBoutique) {
+        this.nomBoutique = nomBoutique;
+    }
 }

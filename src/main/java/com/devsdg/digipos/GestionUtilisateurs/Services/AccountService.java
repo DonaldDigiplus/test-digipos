@@ -3,6 +3,7 @@ package com.devsdg.digipos.GestionUtilisateurs.Services;
 import com.devsdg.digipos.GestionEmail.Format.EmailModel;
 import com.devsdg.digipos.GestionEmail.Service.MyAuthentication;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
+import com.devsdg.digipos.GestionSms.Service.SmsApiService;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.PasswordResetRequestModel;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AccountMetier;
@@ -29,6 +30,8 @@ public class AccountService implements AccountMetier {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private MyAuthentication myAuthentication;
+    @Autowired
+    private SmsApiService smsApiService;
 
     @Override
     public AppUserDTO RegisterAccount(AppUserDTO appUserDTO) {
@@ -70,7 +73,7 @@ public class AccountService implements AccountMetier {
         //Envoie du mail
         myAuthentication.sendMail(userEntity.getEmail(), EmailModel.resetPassword(userEntity.getNomcomplet(), userEntity.getId_user(), token), "Réinitialisation du mot de passe");
         //send sms
-        //smsApiService.smsAuthentification(userEntity.getPhone(), Detail.WebAppUrl +"/resetpassword/"+userEntity.getId_user()+"/"+token);
+        smsApiService.smsAuthentification(userEntity.getPhone(), "Detail.WebAppUrl" +"/resetpassword/"+userEntity.getId_user()+"/"+token);
 
         return passwordResetTokenEntity;
     }
