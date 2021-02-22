@@ -2,6 +2,8 @@ package com.devsdg.digipos.GestionUtilisateurs.Services;
 
 import com.devsdg.digipos.Commons.GeneratorTools.Exceptions.AlgorithmException;
 import com.devsdg.digipos.Commons.GeneratorTools.Voucher.VoucherGenerator;
+import com.devsdg.digipos.GestionBoutiques.Metiers.BoutiqueMetier;
+import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
@@ -39,7 +41,8 @@ public class AppUserSercice implements AppUserMetier {
     private ClientRepository clientRepository;
     @Autowired
     private AppRoleService appRoleService;
-
+    @Autowired
+    private BoutiqueMetier boutiqueMetier;
 
     @Override
     public AppUser saveAppuser(AppUser appUser) {
@@ -107,16 +110,26 @@ public class AppUserSercice implements AppUserMetier {
 
             BeanUtils.copyProperties(proprietaire, appUserDTO);
         } else if(appUserDTO.isVendeur()){
-            Vendeur vendeur = new Vendeur();
+            Boutique boutique = boutiqueMetier.getBoutiqueByNomBoutique(appUserDTO.getNomBoutique());
+            if(boutique!=null){
+                Vendeur vendeur = new Vendeur();
 
-            BeanUtils.copyProperties(appUserDTO, vendeur);
-            vendeur = vendeurRepository.save(vendeur);
-            vendeur.setStaff(true);
+                BeanUtils.copyProperties(appUserDTO, vendeur);
 
-            appRoleService.addRoleToUser(vendeur.getId_user(), "VENDEUR");
-            appRoleService.addRoleToUser(vendeur.getId_user(), "CLIENT");
+                vendeur.setBoutique(boutique);
+                vendeur = vendeurRepository.save(vendeur);
+                vendeur.setStaff(true);
 
-            BeanUtils.copyProperties(vendeur, appUserDTO);
+                boutique.getVendeurs().add(vendeur);
+
+                appRoleService.addRoleToUser(vendeur.getId_user(), "VENDEUR");
+                appRoleService.addRoleToUser(vendeur.getId_user(), "CLIENT");
+
+                BeanUtils.copyProperties(vendeur, appUserDTO);
+            } else {
+                throw new ErrorMessages("Le nom de la boutique est invalide", HttpStatus.NOT_FOUND);
+            }
+
         } else if(!appUserDTO.isAdmin() && !appUserDTO.isSupport() && !appUserDTO.isProprietaire()
                 && !appUserDTO.isVendeur() && !appUserDTO.isClient()){
             AppUser appUser = new AppUser();

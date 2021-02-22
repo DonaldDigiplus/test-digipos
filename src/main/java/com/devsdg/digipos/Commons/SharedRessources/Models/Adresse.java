@@ -1,4 +1,4 @@
-package com.devsdg.digipos.GestionUtilisateurs.Models;
+package com.devsdg.digipos.Commons.SharedRessources.Models;
 
 import javax.persistence.*;
 import java.io.Serializable;
