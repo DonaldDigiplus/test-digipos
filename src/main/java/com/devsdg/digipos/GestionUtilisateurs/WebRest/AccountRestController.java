@@ -40,7 +40,7 @@ public class AccountRestController {
         return accountMetier.requestPasswordReset(passwordResetRequestModel.getEmail());
     }
     @PostMapping(
-            path = "/password-reset",
+            path = "/confirm-password",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )

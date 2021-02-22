@@ -10,7 +10,22 @@ public class EmailModel {
                 "Une requete de reinitialisation de votre mot de passe a été initiée. Si cela n'est pas votre initiative, veuillez contacter le service client. Mais dans le cas contraire, cliquez sur le lien ci-après pour définir votre nouveau mot de passe" +
                 "</p>" +
                 "<p> " +
-//                "<a href='"+ Detail.WebAppUrl +"/resetpassword/"+userId+"/"+token+"'>Cliquer ici pour réinitialiser votre mot de passe</a>" +
+               "<a href='"+ "http://localhost:4200" +"/confirm-password/"+userId+"/"+token+"'>Cliquer ici pour réinitialiser votre mot de passe</a>" +
+                "</p>" +
+                "<hr>\n";
+        return HeadBodyMail + mainBodyMail + FooterBodyMail;
+    }
+
+
+    public static String firstConnexion(String username, String password){
+        String mainBodyMail = "<p align=\"left\">\n" +
+                "Cher(e) <b>" + username + "</b>,\n" +
+                "</p>\n" +
+                "<p align=\"left\">\n" +
+                "Nous vous remercions de continuer le processus de création de votre compte. Bien vouloir vous connecter avec les paramètres suivants: login="+username+"mot de passe="+password +
+                "</p>" +
+                "<p> " +
+                "<a href='"+ "http://localhost:4200/login'>Cliquer ici pour continuer</a>" +
                 "</p>" +
                 "<hr>\n";
         return HeadBodyMail + mainBodyMail + FooterBodyMail;

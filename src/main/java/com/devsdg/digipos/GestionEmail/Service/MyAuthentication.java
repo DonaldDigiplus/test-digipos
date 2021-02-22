@@ -1,11 +1,12 @@
 package com.devsdg.digipos.GestionEmail.Service;
 
+
 import org.springframework.stereotype.Service;
+
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.net.Authenticator;
 import java.util.Date;
 import java.util.Properties;
 

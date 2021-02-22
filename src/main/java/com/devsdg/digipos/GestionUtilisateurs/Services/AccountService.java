@@ -71,9 +71,9 @@ public class AccountService implements AccountMetier {
         passwordResetTokenEntity.setUserdetails(userEntity);
         passwordResetTokenRepository.save(passwordResetTokenEntity);
         //Envoie du mail
-        myAuthentication.sendMail(userEntity.getEmail(), EmailModel.resetPassword(userEntity.getNomcomplet(), userEntity.getId_user(), token), "Réinitialisation du mot de passe");
+        myAuthentication.sendMail(userEntity.getEmail(), EmailModel.resetPassword(userEntity.getNomcomplet(), userEntity.getId_user(), token),"Réinitialisation du mot de passe");
         //send sms
-        smsApiService.smsAuthentification(userEntity.getPhone(), "Detail.WebAppUrl" +"/resetpassword/"+userEntity.getId_user()+"/"+token);
+        //smsApiService.smsAuthentification(userEntity.getPhone(), "http://localhost:4200" +"/confirm-password/"+userEntity.getId_user()+"/"+token);
 
         return passwordResetTokenEntity;
     }

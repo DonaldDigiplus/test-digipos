@@ -4,8 +4,11 @@ import com.devsdg.digipos.Commons.GeneratorTools.Exceptions.AlgorithmException;
 import com.devsdg.digipos.Commons.GeneratorTools.Voucher.VoucherGenerator;
 import com.devsdg.digipos.GestionBoutiques.Metiers.BoutiqueMetier;
 import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
+import com.devsdg.digipos.GestionEmail.Format.EmailModel;
+import com.devsdg.digipos.GestionEmail.Service.MyAuthentication;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
+import com.devsdg.digipos.GestionUtilisateurs.Metiers.AccountMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Models.*;
 import com.devsdg.digipos.GestionUtilisateurs.Repositories.*;
@@ -43,7 +46,10 @@ public class AppUserSercice implements AppUserMetier {
     private AppRoleService appRoleService;
     @Autowired
     private BoutiqueMetier boutiqueMetier;
-
+    @Autowired
+    private MyAuthentication myAuthentication;
+    @Autowired
+    private AccountMetier accountMetier;
     @Override
     public AppUser saveAppuser(AppUser appUser) {
         return appUserRepository.save(appUser);
@@ -51,12 +57,13 @@ public class AppUserSercice implements AppUserMetier {
 
     @Override
     public AppUserDTO saveUser(AppUserDTO appUserDTO) {
-
-        if (appUserDTO.getPassword()!=null || !appUserDTO.getPassword().isEmpty()){
+        String password_to_send_user="";
+        if (appUserDTO.getPassword()!=null){
             String hashpw=bCryptPasswordEncoder.encode(appUserDTO.getPassword());
             appUserDTO.setPassword(hashpw);
         }else {
-            String hashpw=bCryptPasswordEncoder.encode(generatePassword());
+            password_to_send_user=generatePassword();
+            String hashpw=bCryptPasswordEncoder.encode(password_to_send_user);
             appUserDTO.setPassword(hashpw);
         }
 
@@ -84,6 +91,7 @@ public class AppUserSercice implements AppUserMetier {
             appRoleService.addRoleToUser(admin.getId_user(), "CLIENT");
 
             BeanUtils.copyProperties(admin, appUserDTO);
+            accountMetier.requestPasswordReset(admin.getEmail());
         } else if (appUserDTO.isSupport()){
             Support support = new Support();
 
@@ -97,6 +105,8 @@ public class AppUserSercice implements AppUserMetier {
             appRoleService.addRoleToUser(support.getId_user(), "CLIENT");
 
             BeanUtils.copyProperties(support, appUserDTO);
+
+            accountMetier.requestPasswordReset(support.getEmail());
         } else if(appUserDTO.isProprietaire()){
             Proprietaire proprietaire = new Proprietaire();
 
@@ -109,6 +119,7 @@ public class AppUserSercice implements AppUserMetier {
             appRoleService.addRoleToUser(proprietaire.getId_user(), "CLIENT");
 
             BeanUtils.copyProperties(proprietaire, appUserDTO);
+            accountMetier.requestPasswordReset(proprietaire.getEmail());
         } else if(appUserDTO.isVendeur()){
             Boutique boutique = boutiqueMetier.getBoutiqueByNomBoutique(appUserDTO.getNomBoutique());
             if(boutique!=null){
@@ -125,7 +136,9 @@ public class AppUserSercice implements AppUserMetier {
                 appRoleService.addRoleToUser(vendeur.getId_user(), "VENDEUR");
                 appRoleService.addRoleToUser(vendeur.getId_user(), "CLIENT");
 
+
                 BeanUtils.copyProperties(vendeur, appUserDTO);
+                accountMetier.requestPasswordReset(vendeur.getEmail());
             } else {
                 throw new ErrorMessages("Le nom de la boutique est invalide", HttpStatus.NOT_FOUND);
             }
@@ -137,9 +150,11 @@ public class AppUserSercice implements AppUserMetier {
             BeanUtils.copyProperties(appUserDTO, appUser);
             appUser = appUserRepository.save(appUser);
             appUser.setStaff(true);
-
+            accountMetier.requestPasswordReset(appUserDTO.getEmail());
             BeanUtils.copyProperties(appUser, appUserDTO);
         }
+        //myAuthentication.sendMail(appUserDTO.getEmail(), EmailModel.firstConnexion(appUserDTO.getUsername(),password_to_send_user),"Nouveau compte");
+
 
         return appUserDTO;
     }
