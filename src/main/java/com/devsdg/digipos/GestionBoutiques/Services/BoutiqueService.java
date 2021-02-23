@@ -1,5 +1,6 @@
 package com.devsdg.digipos.GestionBoutiques.Services;
 
+import com.devsdg.digipos.Cloudinary.Services.ServiceCloudinary;
 import com.devsdg.digipos.GestionBoutiques.DTO.BoutiqueDTO;
 import com.devsdg.digipos.GestionBoutiques.Metiers.BoutiqueMetier;
 import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
@@ -27,6 +28,8 @@ public class BoutiqueService implements BoutiqueMetier {
     BoutiqueRepository boutiqueRepository;
     @Autowired
     AppUserMetier appUserMetier;
+    @Autowired
+    ServiceCloudinary serviceCloudinary;
 
     @Override
     public BoutiqueDTO saveBoutique(BoutiqueDTO boutiqueDTO) {
@@ -40,7 +43,11 @@ public class BoutiqueService implements BoutiqueMetier {
         boutique.setDate(new Date());
         boutique.setDateLastModification(new Date());
         boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
-
+        boutique.setPhotoboutique(serviceCloudinary.saveObjectOnCloudinary(boutiqueDTO.getPhotoboutique(),
+                "Boutiques",
+                boutique.getLien(),
+                "Mode",
+                boutique.getNomBoutique()));
         boutique = boutiqueRepository.save(boutique);
         Proprietaire proprietaire = (Proprietaire) appUserMetier.getUserByLogin(boutiqueDTO.getNomproprietaire());
         if(!boutiqueDTO.getNomproprietaire().isEmpty() || boutiqueDTO.getNomproprietaire()!=null){
@@ -72,7 +79,11 @@ public class BoutiqueService implements BoutiqueMetier {
         }
         boutique.setDateLastModification(new Date());
         boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
-
+        boutique.setPhotoboutique(serviceCloudinary.saveObjectOnCloudinary(boutiqueDTO.getPhotoboutique(),
+                "Boutiques",
+                boutique.getLien(),
+                "Mode",
+                boutique.getNomBoutique()));
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutique);
         bdto.setNomproprietaire(boutique.getProprietaire().getUsername());
         return bdto;
