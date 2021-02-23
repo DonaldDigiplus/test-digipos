@@ -31,4 +31,6 @@ public interface AppUserMetier {
     List<ClientPOS> findAllByUsernameLike(String username);
     List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username);
     AppUserDTO active_and_desactive_vendeur(ActiveVendeurDTO activeVendeurDTO);
+    List<AppUser> findAllStaffByKeyWord(String keyword);
+    List<AppUser> findAllClientByKeyWord(String keyword);
 }

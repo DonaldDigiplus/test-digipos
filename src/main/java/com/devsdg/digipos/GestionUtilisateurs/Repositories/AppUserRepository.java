@@ -15,6 +15,13 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
      *  Cette fonction est utile a la connexion */
     @Query("select u from AppUser u where lower(u.username) = :login or lower(u.email) = :login or u.phone =: login")
     AppUser findByUsernameOrEmailOrPhone(String login);
+
+    @Query("SELECT p FROM AppUser p WHERE p.staff=true AND CONCAT(p.nomcomplet, p.username, p.email, p.phone) LIKE %?1%")
+    List<AppUser> findAllStaffByKeyWord(String keyword);
+
+    @Query("SELECT p FROM AppUser p WHERE p.client=true AND CONCAT(p.nomcomplet, p.username, p.email, p.phone) LIKE %?1%")
+    List<AppUser> findAllClientByKeyWord(String keyword);
+
     Page<AppUser> findAllByStaffIsTrue(Pageable pageable);
     List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username);
     @Override

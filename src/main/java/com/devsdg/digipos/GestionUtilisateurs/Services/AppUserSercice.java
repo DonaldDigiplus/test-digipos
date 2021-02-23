@@ -331,6 +331,16 @@ public class AppUserSercice implements AppUserMetier {
         return permuteAppUserToAppUserDTO(vendeur);
     }
 
+    @Override
+    public List<AppUser> findAllStaffByKeyWord(String keyword) {
+        return appUserRepository.findAllStaffByKeyWord(keyword);
+    }
+
+    @Override
+    public List<AppUser> findAllClientByKeyWord(String keyword) {
+        return appUserRepository.findAllClientByKeyWord(keyword);
+    }
+
     static AppUserDTO permuteAppUserToAppUserDTO(AppUser user){
         AppUserDTO appUserDTO = new AppUserDTO();
         BeanUtils.copyProperties(user, appUserDTO);
