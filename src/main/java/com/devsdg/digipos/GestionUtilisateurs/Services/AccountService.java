@@ -1,5 +1,6 @@
 package com.devsdg.digipos.GestionUtilisateurs.Services;
 
+import com.devsdg.digipos.GestionBoutiques.Metiers.BoutiqueMetier;
 import com.devsdg.digipos.GestionEmail.Format.EmailModel;
 import com.devsdg.digipos.GestionEmail.Service.MyAuthentication;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService implements AccountMetier {
     @Autowired
     AppUserSercice appUserSercice;
+    @Autowired
+    BoutiqueMetier boutiqueMetier;
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
     @Autowired
@@ -51,7 +54,9 @@ public class AccountService implements AccountMetier {
         if(user==null)
             throw new ErrorMessages("Utilisateur introuvable", HttpStatus.NOT_FOUND);
 
-        return AppUserSercice.permuteAppUserToAppUserDTO(user);
+        AppUserDTO appUserDTO = AppUserSercice.permuteAppUserToAppUserDTO(user);
+        appUserDTO.setNomBoutique(boutiqueMetier.getBoutiqueByProprietaire(user.getId_user()).getNomBoutique());
+        return appUserDTO;
     }
 
     @Override

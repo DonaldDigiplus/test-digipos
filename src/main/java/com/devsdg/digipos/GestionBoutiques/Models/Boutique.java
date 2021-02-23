@@ -3,7 +3,6 @@ package com.devsdg.digipos.GestionBoutiques.Models;
 import com.devsdg.digipos.GestionUtilisateurs.Models.Proprietaire;
 import com.devsdg.digipos.GestionUtilisateurs.Models.Vendeur;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -41,11 +40,9 @@ public class Boutique implements Serializable {
     private boolean activeboutique = true;
 
     //Entity relation map
-    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "id_user")
     private Proprietaire proprietaire;
-    @JsonIgnore
     @OneToMany(mappedBy = "boutique")
     private Collection<Vendeur> vendeurs = new ArrayList<>();
 

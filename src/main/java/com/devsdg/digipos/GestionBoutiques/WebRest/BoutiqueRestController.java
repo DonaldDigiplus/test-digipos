@@ -28,6 +28,11 @@ public class BoutiqueRestController {
         return boutiqueMetier.updateBoutique(boutiqueDTO);
     }
 
+    @GetMapping("/getboutiquebyproprietaire/{id_proprietaire}")
+    BoutiqueDTO getBoutiqueByProprietaire(@PathVariable Long id_proprietaire){
+        return boutiqueMetier.getBoutiqueDTOByProprietaire(id_proprietaire);
+    }
+
     @GetMapping("/getboutiquebyid/{idBoutique}")
     BoutiqueDTO getBoutiqueById(@PathVariable Long idBoutique){
         return boutiqueMetier.getBoutiqueById(idBoutique);

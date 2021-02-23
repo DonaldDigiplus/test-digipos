@@ -6,6 +6,7 @@ import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
 import com.devsdg.digipos.GestionBoutiques.Repository.BoutiqueRepository;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
+import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
 import com.devsdg.digipos.GestionUtilisateurs.Models.Proprietaire;
 import com.devsdg.digipos.GestionUtilisateurs.Models.Vendeur;
 import com.devsdg.digipos.GestionUtilisateurs.Repositories.ProprietaireRepository;
@@ -38,7 +39,9 @@ public class BoutiqueService implements BoutiqueMetier {
 
         Boutique boutique = new Boutique();
         BeanUtils.copyProperties(boutiqueDTO, boutique);
+        boutique.setDate(new Date());
         boutique.setDateLastModification(new Date());
+        boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
 
         boutique = boutiqueRepository.save(boutique);
         Proprietaire proprietaire = (Proprietaire) appUserMetier.getUserByLogin(boutiqueDTO.getProprietaire());
@@ -70,6 +73,7 @@ public class BoutiqueService implements BoutiqueMetier {
             boutique.setDescription(boutiqueDTO.getDescription());
         }
         boutique.setDateLastModification(new Date());
+        boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
 
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutique);
         bdto.setProprietaire(boutique.getProprietaire().getUsername());
@@ -158,6 +162,23 @@ public class BoutiqueService implements BoutiqueMetier {
 
         boutique.getVendeurs().add(vendeur);
         return boutique;
+    }
+
+    @Override
+    public Boutique getBoutiqueByProprietaire(Long id_proprietaire) {
+        Proprietaire proprietaire = (Proprietaire) appUserMetier.findUserById(id_proprietaire);
+        return proprietaire.getBoutique();
+    }
+
+    @Override
+    public BoutiqueDTO getBoutiqueDTOByProprietaire(Long id_proprietaire) {
+        Proprietaire proprietaire = (Proprietaire) appUserMetier.findUserById(id_proprietaire);
+        if(proprietaire!=null){
+            BoutiqueDTO boutiqueDTO = permuteBoutiqueToBoutiqueDTO(proprietaire.getBoutique());
+            boutiqueDTO.setProprietaire(proprietaire.getUsername());
+            return boutiqueDTO;
+        } else
+            throw new ErrorMessages("Le proprietaire entree n'existe pas", HttpStatus.NOT_FOUND);
     }
 
     static BoutiqueDTO permuteBoutiqueToBoutiqueDTO(Boutique boutique){

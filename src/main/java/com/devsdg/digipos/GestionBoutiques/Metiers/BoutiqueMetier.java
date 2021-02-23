@@ -21,5 +21,7 @@ public interface BoutiqueMetier {
     boolean active_and_desactive_boutique(Long idBoutique);
     BoutiqueDTO addProprietaireToBoutique(Long idboutique, Long idProprietaire);
     Boutique addVendeurToBoutique(Long idboutique, Long idVendeur);
+    Boutique getBoutiqueByProprietaire(Long id_proprietaire);
+    BoutiqueDTO getBoutiqueDTOByProprietaire(Long id_proprietaire);
 
 }

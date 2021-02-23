@@ -1,6 +1,7 @@
 package com.devsdg.digipos.GestionUtilisateurs.Models;
 
 import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,6 +14,7 @@ public class Vendeur extends ShopUser{
 
     private boolean activevendeur=true;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "idBoutique")
     private Boutique boutique;

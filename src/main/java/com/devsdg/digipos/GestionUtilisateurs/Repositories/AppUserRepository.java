@@ -27,6 +27,4 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     Page<AppUser> findAllByStaffIsTrue(Pageable pageable);
     List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username);
-    @Override
-    Page<AppUser> findAll(Pageable pageable);
 }

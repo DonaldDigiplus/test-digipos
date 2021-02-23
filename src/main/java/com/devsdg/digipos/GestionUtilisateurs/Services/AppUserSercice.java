@@ -55,6 +55,7 @@ public class AppUserSercice implements AppUserMetier {
     @Override
     public AppUser saveAppuser(AppUser appUser) {
         appUser.setDate(new Date());
+        appUser.setAtiveuser(true);
         return appUserRepository.save(appUser);
     }
 
@@ -75,6 +76,7 @@ public class AppUserSercice implements AppUserMetier {
 
             BeanUtils.copyProperties(appUserDTO, clientPOS);
             clientPOS.setClient(true);
+            clientPOS.setAtiveuser(true);
             clientPOS.setDate(new Date());
             clientPOS = clientRepository.save(clientPOS);
 
@@ -86,6 +88,7 @@ public class AppUserSercice implements AppUserMetier {
 
             BeanUtils.copyProperties(appUserDTO, admin);
             admin.setStaff(true);
+            admin.setAtiveuser(true);
             admin.setDate(new Date());
             admin = adminRepository.save(admin);
 
@@ -102,6 +105,7 @@ public class AppUserSercice implements AppUserMetier {
 
             BeanUtils.copyProperties(appUserDTO, support);
             support.setStaff(true);
+            support.setAtiveuser(true);
             support.setDate(new Date());
             support = supportRepository.save(support);
 
@@ -118,6 +122,7 @@ public class AppUserSercice implements AppUserMetier {
 
             BeanUtils.copyProperties(appUserDTO, proprietaire);
             proprietaire.setStaff(true);
+            proprietaire.setAtiveuser(true);
             proprietaire.setDate(new Date());
             proprietaire = proprietaireRepository.save(proprietaire);
 
@@ -136,6 +141,7 @@ public class AppUserSercice implements AppUserMetier {
 
                 vendeur.setBoutique(boutique);
                 vendeur.setStaff(true);
+                vendeur.setAtiveuser(true);
                 vendeur.setDate(new Date());
                 vendeur = vendeurRepository.save(vendeur);
 
@@ -157,6 +163,7 @@ public class AppUserSercice implements AppUserMetier {
 
             BeanUtils.copyProperties(appUserDTO, appUser);
             appUser.setStaff(true);
+            appUser.setAtiveuser(true);
             appUser.setDate(new Date());
             appUser = appUserRepository.save(appUser);
             accountMetier.requestPasswordReset(appUserDTO.getEmail());
