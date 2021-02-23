@@ -6,10 +6,8 @@ import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
 import com.devsdg.digipos.GestionBoutiques.Repository.BoutiqueRepository;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
-import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
 import com.devsdg.digipos.GestionUtilisateurs.Models.Proprietaire;
 import com.devsdg.digipos.GestionUtilisateurs.Models.Vendeur;
-import com.devsdg.digipos.GestionUtilisateurs.Repositories.ProprietaireRepository;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +42,12 @@ public class BoutiqueService implements BoutiqueMetier {
         boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
 
         boutique = boutiqueRepository.save(boutique);
-        Proprietaire proprietaire = (Proprietaire) appUserMetier.getUserByLogin(boutiqueDTO.getProprietaire());
-        if(!boutiqueDTO.getProprietaire().isEmpty() || boutiqueDTO.getProprietaire()!=null){
+        Proprietaire proprietaire = (Proprietaire) appUserMetier.getUserByLogin(boutiqueDTO.getNomproprietaire());
+        if(!boutiqueDTO.getNomproprietaire().isEmpty() || boutiqueDTO.getNomproprietaire()!=null){
             this.addProprietaireToBoutique(boutique.getIdBoutique(), proprietaire.getId_user());
         }
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutique);
-        bdto.setProprietaire(proprietaire.getUsername());
+        bdto.setNomproprietaire(proprietaire.getUsername());
         return bdto;
     }
 
@@ -76,21 +74,21 @@ public class BoutiqueService implements BoutiqueMetier {
         boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
 
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutique);
-        bdto.setProprietaire(boutique.getProprietaire().getUsername());
+        bdto.setNomproprietaire(boutique.getProprietaire().getUsername());
         return bdto;
     }
 
     @Override
     public BoutiqueDTO getBoutiqueById(Long idBoutique) {
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutiqueRepository.getOne(idBoutique));
-        bdto.setProprietaire(boutiqueRepository.getOne(idBoutique).getProprietaire().getUsername());
+        bdto.setNomproprietaire(boutiqueRepository.getOne(idBoutique).getProprietaire().getUsername());
         return bdto;
     }
 
     @Override
     public BoutiqueDTO getBoutiqueByName(String nomBoutique) {
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutiqueRepository.findByNomBoutique(nomBoutique));
-        bdto.setProprietaire(boutiqueRepository.findByNomBoutique(nomBoutique).getProprietaire().getUsername());
+        bdto.setNomproprietaire(boutiqueRepository.findByNomBoutique(nomBoutique).getProprietaire().getUsername());
         return bdto;
     }
 
@@ -103,13 +101,13 @@ public class BoutiqueService implements BoutiqueMetier {
     @Override
     public BoutiqueDTO getBoutiqueByPhone(String phoneBoutique) {
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutiqueRepository.findByTelephoneBoutique(phoneBoutique));
-        bdto.setProprietaire(boutiqueRepository.findByTelephoneBoutique(phoneBoutique).getProprietaire().getUsername());
+        bdto.setNomproprietaire(boutiqueRepository.findByTelephoneBoutique(phoneBoutique).getProprietaire().getUsername());
         return bdto;    }
 
     @Override
     public BoutiqueDTO getBoutiqueByLien(String lienBoutique) {
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutiqueRepository.findByLien(lienBoutique));
-        bdto.setProprietaire(boutiqueRepository.findByLien(lienBoutique).getProprietaire().getUsername());
+        bdto.setNomproprietaire(boutiqueRepository.findByLien(lienBoutique).getProprietaire().getUsername());
         return bdto;
     }
 
@@ -166,16 +164,16 @@ public class BoutiqueService implements BoutiqueMetier {
 
     @Override
     public Boutique getBoutiqueByProprietaire(Long id_proprietaire) {
-        Proprietaire proprietaire = (Proprietaire) appUserMetier.findUserById(id_proprietaire);
+        Proprietaire proprietaire = appUserMetier.getProprietaireById(id_proprietaire);
         return proprietaire.getBoutique();
     }
 
     @Override
     public BoutiqueDTO getBoutiqueDTOByProprietaire(Long id_proprietaire) {
-        Proprietaire proprietaire = (Proprietaire) appUserMetier.findUserById(id_proprietaire);
+        Proprietaire proprietaire = appUserMetier.getProprietaireById(id_proprietaire);
         if(proprietaire!=null){
             BoutiqueDTO boutiqueDTO = permuteBoutiqueToBoutiqueDTO(proprietaire.getBoutique());
-            boutiqueDTO.setProprietaire(proprietaire.getUsername());
+            boutiqueDTO.setNomproprietaire(proprietaire.getUsername());
             return boutiqueDTO;
         } else
             throw new ErrorMessages("Le proprietaire entree n'existe pas", HttpStatus.NOT_FOUND);

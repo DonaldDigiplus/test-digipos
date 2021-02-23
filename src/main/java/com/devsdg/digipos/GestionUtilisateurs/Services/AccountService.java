@@ -55,7 +55,8 @@ public class AccountService implements AccountMetier {
             throw new ErrorMessages("Utilisateur introuvable", HttpStatus.NOT_FOUND);
 
         AppUserDTO appUserDTO = AppUserSercice.permuteAppUserToAppUserDTO(user);
-        appUserDTO.setNomBoutique(boutiqueMetier.getBoutiqueByProprietaire(user.getId_user()).getNomBoutique());
+        if(user.getRoles().size()==3)
+            appUserDTO.setNomBoutique(boutiqueMetier.getBoutiqueByProprietaire(user.getId_user()).getNomBoutique());
         return appUserDTO;
     }
 

@@ -353,6 +353,11 @@ public class AppUserSercice implements AppUserMetier {
         return appUserRepository.findAllProprietaireName();
     }
 
+    @Override
+    public Proprietaire getProprietaireById(Long id_proprietaire) {
+        return proprietaireRepository.getOne(id_proprietaire);
+    }
+
     static AppUserDTO permuteAppUserToAppUserDTO(AppUser user){
         AppUserDTO appUserDTO = new AppUserDTO();
         BeanUtils.copyProperties(user, appUserDTO);

@@ -18,7 +18,7 @@ public class BoutiqueDTO {
     private String description;
     private Date date;
     private boolean activeboutique;
-    private String proprietaire;
+    private String nomproprietaire;
 
     public Long getIdBoutique() {
         return idBoutique;
@@ -132,11 +132,11 @@ public class BoutiqueDTO {
         this.activeboutique = activeboutique;
     }
 
-    public String getProprietaire() {
-        return proprietaire;
+    public String getNomproprietaire() {
+        return nomproprietaire;
     }
 
-    public void setProprietaire(String proprietaire) {
-        this.proprietaire = proprietaire;
+    public void setNomproprietaire(String nomproprietaire) {
+        this.nomproprietaire = nomproprietaire;
     }
 }
