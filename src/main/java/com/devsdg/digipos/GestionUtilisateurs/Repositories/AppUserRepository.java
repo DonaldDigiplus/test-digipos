@@ -22,6 +22,9 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Query("SELECT p FROM AppUser p WHERE p.client=true AND CONCAT(p.nomcomplet, p.username, p.email, p.phone) LIKE %?1%")
     List<AppUser> findAllClientByKeyWord(String keyword);
 
+    @Query("select q.nomcomplet from Proprietaire q order by q.date desc")
+    List<String> findAllProprietaireName();
+
     Page<AppUser> findAllByStaffIsTrue(Pageable pageable);
     List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username);
     @Override

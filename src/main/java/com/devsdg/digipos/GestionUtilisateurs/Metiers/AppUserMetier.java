@@ -33,4 +33,5 @@ public interface AppUserMetier {
     AppUserDTO active_and_desactive_vendeur(ActiveVendeurDTO activeVendeurDTO);
     List<AppUser> findAllStaffByKeyWord(String keyword);
     List<AppUser> findAllClientByKeyWord(String keyword);
+    List<String> findAllProprietaireName();
 }

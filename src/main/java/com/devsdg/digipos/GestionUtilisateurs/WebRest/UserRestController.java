@@ -92,6 +92,11 @@ public class UserRestController {
         return userMetier.findAllByUsernameLikeAndStaffIsTrue(username);
     }
 
+    @GetMapping("/getallproprietairesname")
+    public List<String> findAllProprietaireName(){
+        return userMetier.findAllProprietaireName();
+    }
+
     @GetMapping("/active_desactive_user/{id_user}")
     public boolean active_desactive_user(@PathVariable Long id_user){
         return userMetier.active_and_desactive_user(id_user);
