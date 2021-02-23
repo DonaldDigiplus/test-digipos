@@ -22,6 +22,7 @@ public class AppUserDTO {
     private boolean isSupport;
     private boolean ativeuser;
     private String nomBoutique;
+    private boolean activevendeur;
 
     public AppUserDTO() {
     }
@@ -161,11 +162,20 @@ public class AppUserDTO {
     public void setNomBoutique(String nomBoutique) {
         this.nomBoutique = nomBoutique;
     }
+
     public boolean isAtiveuser() {
         return ativeuser;
     }
 
     public void setAtiveuser(boolean ativeuser) {
         this.ativeuser = ativeuser;
+    }
+
+    public boolean isActivevendeur() {
+        return activevendeur;
+    }
+
+    public void setActivevendeur(boolean activevendeur) {
+        this.activevendeur = activevendeur;
     }
 }

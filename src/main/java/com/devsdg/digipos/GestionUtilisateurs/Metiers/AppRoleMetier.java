@@ -11,4 +11,5 @@ public interface AppRoleMetier {
     List<AppRoleDTO> getRoles();
 
     boolean addRoleToUser(Long id_user, String rolename);
+    boolean deleteRoleToUser(Long id_user);
 }

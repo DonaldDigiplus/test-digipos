@@ -1,6 +1,7 @@
 package com.devsdg.digipos.GestionUtilisateurs.WebRest;
 
 
+import com.devsdg.digipos.GestionUtilisateurs.DTO.ActiveVendeurDTO;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Models.*;
@@ -94,6 +95,11 @@ public class UserRestController {
     @GetMapping("/active_desactive_user/{id_user}")
     public boolean active_desactive_user(@PathVariable Long id_user){
         return userMetier.active_and_desactive_user(id_user);
+    }
+
+    @PostMapping("/active_desactive_vendeur")
+    public AppUserDTO active_desactive_vendeur(@RequestBody ActiveVendeurDTO activeVendeurDTO){
+        return userMetier.active_and_desactive_vendeur(activeVendeurDTO);
     }
 
 }

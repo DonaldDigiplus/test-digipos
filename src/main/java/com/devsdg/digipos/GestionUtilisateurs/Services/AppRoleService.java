@@ -86,6 +86,16 @@ public class AppRoleService implements AppRoleMetier {
             throw new ErrorMessages("Impossible d'affecter ce role car l'utilisateur n'existe pas.", HttpStatus.NOT_FOUND);
     }
 
+    @Override
+    public boolean deleteRoleToUser(Long id_user) {
+        AppUser vendeur = appUserMetier.findUserById(id_user);
+        if(vendeur!=null){
+            vendeur.getRoles().clear();
+            return this.addRoleToUser(id_user, "CLIENT");
+        } else
+            throw new ErrorMessages("Impossible d'affecter ce role car l'utilisateur n'existe pas.", HttpStatus.NOT_FOUND);
+    }
+
     AppRoleDTO permuteAppRoleToAppRoleDTO(AppRole role){
         AppRoleDTO appRoleDTO = new AppRoleDTO();
         BeanUtils.copyProperties(role, appRoleDTO);

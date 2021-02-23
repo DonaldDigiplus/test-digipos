@@ -1,5 +1,6 @@
 package com.devsdg.digipos.GestionUtilisateurs.Metiers;
 
+import com.devsdg.digipos.GestionUtilisateurs.DTO.ActiveVendeurDTO;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Models.*;
 import org.springframework.data.domain.Page;
@@ -29,4 +30,5 @@ public interface AppUserMetier {
     boolean active_and_desactive_user(Long id_user);
     List<ClientPOS> findAllByUsernameLike(String username);
     List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username);
+    AppUserDTO active_and_desactive_vendeur(ActiveVendeurDTO activeVendeurDTO);
 }

@@ -7,6 +7,7 @@ import com.devsdg.digipos.GestionBoutiques.Models.Boutique;
 import com.devsdg.digipos.GestionEmail.Format.EmailModel;
 import com.devsdg.digipos.GestionEmail.Service.MyAuthentication;
 import com.devsdg.digipos.GestionErreurs.ErrorMessages;
+import com.devsdg.digipos.GestionUtilisateurs.DTO.ActiveVendeurDTO;
 import com.devsdg.digipos.GestionUtilisateurs.DTO.AppUserDTO;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AccountMetier;
 import com.devsdg.digipos.GestionUtilisateurs.Metiers.AppUserMetier;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Transactional
@@ -52,6 +54,7 @@ public class AppUserSercice implements AppUserMetier {
     private AccountMetier accountMetier;
     @Override
     public AppUser saveAppuser(AppUser appUser) {
+        appUser.setDate(new Date());
         return appUserRepository.save(appUser);
     }
 
@@ -71,8 +74,9 @@ public class AppUserSercice implements AppUserMetier {
             ClientPOS clientPOS = new ClientPOS();
 
             BeanUtils.copyProperties(appUserDTO, clientPOS);
-            clientPOS = clientRepository.save(clientPOS);
             clientPOS.setClient(true);
+            clientPOS.setDate(new Date());
+            clientPOS = clientRepository.save(clientPOS);
 
             appRoleService.addRoleToUser(clientPOS.getId_user(), "CLIENT");
 
@@ -81,8 +85,9 @@ public class AppUserSercice implements AppUserMetier {
             Admin admin = new Admin();
 
             BeanUtils.copyProperties(appUserDTO, admin);
-            admin = adminRepository.save(admin);
             admin.setStaff(true);
+            admin.setDate(new Date());
+            admin = adminRepository.save(admin);
 
             appRoleService.addRoleToUser(admin.getId_user(), "ADMIN");
             appRoleService.addRoleToUser(admin.getId_user(), "PROPRIETAIRE");
@@ -96,8 +101,9 @@ public class AppUserSercice implements AppUserMetier {
             Support support = new Support();
 
             BeanUtils.copyProperties(appUserDTO, support);
-            support = supportRepository.save(support);
             support.setStaff(true);
+            support.setDate(new Date());
+            support = supportRepository.save(support);
 
             appRoleService.addRoleToUser(support.getId_user(), "PROPRIETAIRE");
             appRoleService.addRoleToUser(support.getId_user(), "VENDEUR");
@@ -111,8 +117,9 @@ public class AppUserSercice implements AppUserMetier {
             Proprietaire proprietaire = new Proprietaire();
 
             BeanUtils.copyProperties(appUserDTO, proprietaire);
-            proprietaire = proprietaireRepository.save(proprietaire);
             proprietaire.setStaff(true);
+            proprietaire.setDate(new Date());
+            proprietaire = proprietaireRepository.save(proprietaire);
 
             appRoleService.addRoleToUser(proprietaire.getId_user(), "PROPRIETAIRE");
             appRoleService.addRoleToUser(proprietaire.getId_user(), "VENDEUR");
@@ -128,8 +135,9 @@ public class AppUserSercice implements AppUserMetier {
                 BeanUtils.copyProperties(appUserDTO, vendeur);
 
                 vendeur.setBoutique(boutique);
-                vendeur = vendeurRepository.save(vendeur);
                 vendeur.setStaff(true);
+                vendeur.setDate(new Date());
+                vendeur = vendeurRepository.save(vendeur);
 
                 boutique.getVendeurs().add(vendeur);
 
@@ -148,8 +156,9 @@ public class AppUserSercice implements AppUserMetier {
             AppUser appUser = new AppUser();
 
             BeanUtils.copyProperties(appUserDTO, appUser);
-            appUser = appUserRepository.save(appUser);
             appUser.setStaff(true);
+            appUser.setDate(new Date());
+            appUser = appUserRepository.save(appUser);
             accountMetier.requestPasswordReset(appUserDTO.getEmail());
             BeanUtils.copyProperties(appUser, appUserDTO);
         }
@@ -290,6 +299,36 @@ public class AppUserSercice implements AppUserMetier {
     @Override
     public List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username) {
         return appUserRepository.findAllByUsernameLikeAndStaffIsTrue("%"+username+"%");
+    }
+
+    @Override
+    public AppUserDTO active_and_desactive_vendeur(ActiveVendeurDTO activeVendeurDTO) {
+        Vendeur vendeur = vendeurRepository.getOne(activeVendeurDTO.getIdVendeur());
+
+        if(activeVendeurDTO.isActive_desactive()){
+            vendeur.setActivevendeur(true);
+            vendeur.setStaff(true);
+            vendeur.setClient(false);
+
+            Boutique boutique = boutiqueMetier.getBoutiqueByNomBoutique(activeVendeurDTO.getNomBoutique());
+            if(boutique!=null){
+                vendeur.setBoutique(boutique);
+            } else
+                throw new ErrorMessages("Impossible de continuer car la boutique choisi n'existe pas", HttpStatus.NOT_FOUND);
+
+            appRoleService.addRoleToUser(vendeur.getId_user(), "VENDEUR");
+        } else {
+            //Suppression des fonction du vendeur
+            vendeur.setStaff(false);
+            vendeur.setBoutique(null);
+            vendeur.setActivevendeur(false);
+            appRoleService.deleteRoleToUser(vendeur.getId_user());
+
+            //Definition des fonctions d'un client
+            vendeur.setClient(true);
+        }
+        appRoleService.addRoleToUser(vendeur.getId_user(), "CLIENT");
+        return permuteAppUserToAppUserDTO(vendeur);
     }
 
     static AppUserDTO permuteAppUserToAppUserDTO(AppUser user){
