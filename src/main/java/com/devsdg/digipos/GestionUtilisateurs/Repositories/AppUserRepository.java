@@ -1,11 +1,14 @@
 package com.devsdg.digipos.GestionUtilisateurs.Repositories;
 
 import com.devsdg.digipos.GestionUtilisateurs.Models.AppUser;
+import com.devsdg.digipos.GestionUtilisateurs.Models.ClientPOS;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
@@ -14,6 +17,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Query("select u from AppUser u where lower(u.username) = :login or lower(u.email) = :login or u.phone =: login")
     AppUser findByUsernameOrEmailOrPhone(String login);
     Page<AppUser> findAllByStaffIsTrue(Pageable pageable);
+    List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username);
     @Override
     Page<AppUser> findAll(Pageable pageable);
 }

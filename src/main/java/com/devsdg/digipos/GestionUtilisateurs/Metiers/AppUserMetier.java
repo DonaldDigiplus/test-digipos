@@ -5,6 +5,8 @@ import com.devsdg.digipos.GestionUtilisateurs.Models.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface AppUserMetier {
     AppUser saveAppuser(AppUser appUser);
     AppUserDTO saveUser(AppUserDTO appUserDTO);
@@ -25,4 +27,6 @@ public interface AppUserMetier {
     Page<ClientPOS> getAllClientPOSsIsActive(Pageable pageable);
     Page<AppUser> findAllByStaffIsTrue(Pageable pageable);
     boolean active_and_desactive_user(Long id_user);
+    List<ClientPOS> findAllByUsernameLike(String username);
+    List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username);
 }

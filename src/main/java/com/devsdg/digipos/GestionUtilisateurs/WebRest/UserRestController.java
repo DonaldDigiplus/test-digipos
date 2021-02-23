@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin("*")
 @RestController
 public class UserRestController {
@@ -50,7 +52,7 @@ public class UserRestController {
         return userMetier.getAllSupportsIsActive(pageable);
     }
 
-    @GetMapping("/getallproprietaires")
+    @GetMapping("/all_proprietaires")
     public Page<Proprietaire> getAllProprietaires(Pageable pageable){
         return userMetier.getAllProprietaires(pageable);
     }
@@ -60,7 +62,7 @@ public class UserRestController {
         return userMetier.getAllProprietairesIsActive(pageable);
     }
 
-    @GetMapping("/getallvendeurs")
+    @GetMapping("/all_vendeurs")
     public Page<Vendeur> getAllVendeurs(Pageable pageable){
         return userMetier.getAllVendeurs(pageable);
     }
@@ -78,6 +80,15 @@ public class UserRestController {
     @GetMapping("/getallclientsisactive")
     public Page<ClientPOS> getAllClientPOSIsActive(Pageable pageable){
         return userMetier.getAllClientPOSsIsActive(pageable);
+    }
+
+    @GetMapping("/search_client/{username}")
+    public List<ClientPOS> searchAllClientPOS(@PathVariable String username){
+        return userMetier.findAllByUsernameLike(username);
+    }
+    @GetMapping("/search_staff/{username}")
+    public List<AppUser> searchAllSTAFPOS(@PathVariable String username){
+        return userMetier.findAllByUsernameLikeAndStaffIsTrue(username);
     }
 
     @GetMapping("/active_desactive_user/{id_user}")

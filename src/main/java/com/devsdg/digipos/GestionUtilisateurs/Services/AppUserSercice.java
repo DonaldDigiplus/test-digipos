@@ -282,6 +282,16 @@ public class AppUserSercice implements AppUserMetier {
         return user.isAtiveuser();
     }
 
+    @Override
+    public List<ClientPOS> findAllByUsernameLike(String username) {
+        return clientRepository.findAllByUsernameLike("%"+username+"%");
+    }
+
+    @Override
+    public List<AppUser> findAllByUsernameLikeAndStaffIsTrue(String username) {
+        return appUserRepository.findAllByUsernameLikeAndStaffIsTrue("%"+username+"%");
+    }
+
     static AppUserDTO permuteAppUserToAppUserDTO(AppUser user){
         AppUserDTO appUserDTO = new AppUserDTO();
         BeanUtils.copyProperties(user, appUserDTO);
