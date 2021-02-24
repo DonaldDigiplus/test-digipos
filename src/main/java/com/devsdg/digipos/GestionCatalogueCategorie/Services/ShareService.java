@@ -1,5 +1,6 @@
 package com.devsdg.digipos.GestionCatalogueCategorie.Services;
 
+import com.devsdg.digipos.Cloudinary.Services.ServiceCloudinary;
 import com.devsdg.digipos.GestionCatalogueCategorie.DTO.CatalogueProduitDTO;
 import com.devsdg.digipos.GestionCatalogueCategorie.DTO.CategorieProduitDTO;
 import com.devsdg.digipos.GestionCatalogueCategorie.Metiers.CatalogueProduitMetier;
@@ -20,10 +21,18 @@ import java.io.*;
 @Service
 @Transactional
 public class ShareService implements ShareMetier {
-    @Autowired
+    final
     CatalogueProduitMetier catalogueProduitMetier;
-    @Autowired
+    final
     CategorieProduitMetier categorieProduitMetier;
+    final
+    ServiceCloudinary serviceCloudinary;
+
+    public ShareService(CatalogueProduitMetier catalogueProduitMetier, CategorieProduitMetier categorieProduitMetier, ServiceCloudinary serviceCloudinary) {
+        this.catalogueProduitMetier = catalogueProduitMetier;
+        this.categorieProduitMetier = categorieProduitMetier;
+        this.serviceCloudinary = serviceCloudinary;
+    }
 
     @Override
     public boolean uploadXLSFile(MultipartFile multipartFile) {
@@ -32,6 +41,21 @@ public class ShareService implements ShareMetier {
 
         this.loadData(file);
         return true;
+    }
+
+    @Override
+    public CatalogueProduitDTO uploadImageFile(MultipartFile multipartFile) {
+        CatalogueProduit catalogueProduit = catalogueProduitMetier.getCatalogueByNomIgnoreCase(multipartFile.getOriginalFilename());
+        if(catalogueProduit!=null){
+            catalogueProduit.setImage(
+                    serviceCloudinary.uploadImage(multipartFile,
+                    "Catalogues",
+                    null,
+                    catalogueProduit.getCategorieProduit().getSecteuractivite(),
+                    multipartFile.getOriginalFilename()));
+            return CatalogueProduitService.permuteCatalogueProduitToCatalogueProduitDTO(catalogueProduit);
+        } else
+            return null;
     }
 
     public File writeFile(MultipartFile multipartFile) {
@@ -49,7 +73,8 @@ public class ShareService implements ShareMetier {
         try {
             File file = new File(current + "/" +filename+".xlsx");
             if (file.exists()) {
-                file.delete();
+                boolean b = file.delete();
+                System.out.println(b);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +113,7 @@ public class ShareService implements ShareMetier {
                     if(categorieProduit!=null){
                         CatalogueProduit catalogueProduit = catalogueProduitMetier.getCatalogueByNomIgnoreCase(row.getCell(0).getStringCellValue());
                         if(catalogueProduit==null){
-                            CatalogueProduitDTO catalogue = catalogueProduitMetier.saveCatalogue(new CatalogueProduitDTO(categorieProduit, row.getCell(0).getStringCellValue(), row.getCell(3).getStringCellValue(), row.getCell(4).getNumericCellValue()));
+                            catalogueProduitMetier.saveCatalogue(new CatalogueProduitDTO(categorieProduit, row.getCell(0).getStringCellValue(), row.getCell(3).getStringCellValue(), row.getCell(4).getNumericCellValue()));
                         }
                     }
                 }

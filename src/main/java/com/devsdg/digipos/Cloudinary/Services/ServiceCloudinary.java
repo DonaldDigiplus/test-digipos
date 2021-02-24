@@ -9,12 +9,16 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.Assert.assertTrue;
 
@@ -92,6 +96,47 @@ public class ServiceCloudinary {
         return cloudinarie.getUrl();
     }
 
+    public String uploadImage(MultipartFile multipartFile,
+                                   String categorie,
+                                   String nomBoutique,
+                                   String secteurActivite,
+                                   String objectName) {
+        cloudinarie=new Cloudinarie();
+        cloudinary=cloudinaryConfig();
+        File file=convert(multipartFile);
+
+//Get Source of image
+        String src="";
+
+        if(categorie.equalsIgnoreCase("boutiques")){
+            src = categorie + "/" + secteurActivite + "/" + nomBoutique + "/" + objectName;
+        } else if(categorie.equalsIgnoreCase("produits")){
+            src = categorie + "/" + secteurActivite + "/" + nomBoutique + "/produits/" + objectName;
+        } else if(categorie.equalsIgnoreCase("catalogues")){
+            src = categorie + "/" + secteurActivite + "/" + objectName;
+        } else if(categorie.equalsIgnoreCase("publicites")){
+            src = categorie + "/" + nomBoutique + "/" + objectName;
+        }
+
+        //Upload de l'image
+        Map result= null;
+        try {
+            result = cloudinary.uploader().upload(file, ObjectUtils.asMap("public_id", src));
+            //Map result=cloudinary.uploader().upload(file,ObjectUtils.emptyMap());
+            cloudinarie.setSignature((String) result.get("signature"));
+            cloudinarie.setFormat((String) result.get("format"));
+            cloudinarie.setSecure_url(((String) result.get("secure_url")));
+            cloudinarie.setUrl(result.get("url").toString());
+            cloudinarie.setPublic_id(result.get("public_id").toString());
+            cloudinarie.setType(result.get("type").toString());
+            //cloudinarie.setOriginal_filname(result.get("original_filname").toString());
+            cloudinarie = cloudinaryRepository.save(cloudinarie);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+        return cloudinarie.getUrl();
+    }
+
     public Cloudinary cloudinaryConfig() {
         Cloudinary cloudinary = null;
         Map config = new HashMap();
@@ -115,4 +160,16 @@ public class ServiceCloudinary {
         }
     }
 
+    private File convert(MultipartFile multipartFile) {
+        File file=new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        try {
+        FileOutputStream fo= null;
+        fo = new FileOutputStream(file);
+        fo.write(multipartFile.getBytes());
+        fo.close();
+     } catch (IOException e) {
+        e.printStackTrace();
+        }
+        return file;
+    }
 }

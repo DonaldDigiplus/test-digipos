@@ -29,8 +29,13 @@ public class CatalogueCategorieRestController {
     ShareMetier shareMetier;
 
     @PostMapping("/updatexlsfile")
-    boolean updloadXLSFile(@RequestBody MultipartFile multipartFile){
+    boolean updloadXLSFile(@RequestParam("file") MultipartFile multipartFile){
         return shareMetier.uploadXLSFile(multipartFile);
+    }
+
+    @PostMapping("/updateimagefile")
+    CatalogueProduitDTO updloadImageFile(@RequestParam("file") MultipartFile multipartFile){
+        return shareMetier.uploadImageFile(multipartFile);
     }
 
     /*C A T E G O R I E    DE   P R O D U I T S*/

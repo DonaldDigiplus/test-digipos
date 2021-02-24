@@ -15,9 +15,6 @@ public class CatalogueProduit implements Serializable {
     @ManyToOne
     @JoinColumn(name = "idCategorie")
     private CategorieProduit categorieProduit;
-    /*@JsonIgnore
-    @OneToMany(mappedBy = "catalogueProduit")
-    private List<Produit> produits;*/
     @Column(unique = true)
     private String nomProduit;
 
@@ -28,6 +25,7 @@ public class CatalogueProduit implements Serializable {
     private String image;
     @JsonFormat(timezone = "GMT+01:00")
     private Date date=new Date();
+    @Column()
     private boolean active=true;
 
     public CatalogueProduit() {
