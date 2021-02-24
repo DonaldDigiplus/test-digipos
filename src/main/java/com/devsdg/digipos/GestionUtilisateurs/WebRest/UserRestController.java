@@ -25,7 +25,8 @@ public class UserRestController {
 
     @PutMapping("/update")
     public AppUserDTO update(@RequestBody AppUserDTO user){
-        return userMetier.updateUser(user);
+        user=userMetier.updateUser(user);
+        return user;
     }
 
     @GetMapping("/getuser/{id_user}")

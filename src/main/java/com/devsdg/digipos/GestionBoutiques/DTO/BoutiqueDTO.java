@@ -1,5 +1,10 @@
 package com.devsdg.digipos.GestionBoutiques.DTO;
 
+import com.devsdg.digipos.GestionUtilisateurs.Models.Proprietaire;
+import com.devsdg.digipos.GestionUtilisateurs.Models.Vendeur;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class BoutiqueDTO {
@@ -19,6 +24,9 @@ public class BoutiqueDTO {
     private Date date;
     private boolean activeboutique;
     private String nomproprietaire;
+    private Proprietaire proprietaire;
+    private Collection<Vendeur> vendeurs = new ArrayList<>();
+
 
     public Long getIdBoutique() {
         return idBoutique;
@@ -138,5 +146,21 @@ public class BoutiqueDTO {
 
     public void setNomproprietaire(String nomproprietaire) {
         this.nomproprietaire = nomproprietaire;
+    }
+
+    public Proprietaire getProprietaire() {
+        return proprietaire;
+    }
+
+    public void setProprietaire(Proprietaire proprietaire) {
+        this.proprietaire = proprietaire;
+    }
+
+    public Collection<Vendeur> getVendeurs() {
+        return vendeurs;
+    }
+
+    public void setVendeurs(Collection<Vendeur> vendeurs) {
+        this.vendeurs = vendeurs;
     }
 }
