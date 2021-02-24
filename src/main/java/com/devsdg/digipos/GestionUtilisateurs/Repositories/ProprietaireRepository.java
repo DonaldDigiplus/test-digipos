@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProprietaireRepository extends JpaRepository<Proprietaire, Long> {
     Page<Proprietaire> findAllByAtiveuserIsTrue(Pageable pageable);
+    Proprietaire findByUsername(String username);
 }

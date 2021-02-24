@@ -79,7 +79,7 @@ public class ServiceCloudinary {
         cloudinarie.setUrl(result.get("url").toString());
         cloudinarie.setPublic_id(result.get("public_id").toString());
         cloudinarie.setType(result.get("type").toString());
-        cloudinarie.setOriginal_filname(result.get("original_filname").toString());
+        //cloudinarie.setOriginal_filname(result.get("original_filname").toString());
         cloudinarie = cloudinaryRepository.save(cloudinarie);
         boolean b = file.delete();
         if(!b)

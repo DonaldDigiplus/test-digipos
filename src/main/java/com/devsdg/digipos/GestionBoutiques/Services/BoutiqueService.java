@@ -42,9 +42,14 @@ public class BoutiqueService implements BoutiqueMetier {
         BeanUtils.copyProperties(boutiqueDTO, boutique);
         boutique.setDate(new Date());
         boutique.setDateLastModification(new Date());
+        boutique.setActiveboutique(true);
         boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
         boutique = boutiqueRepository.save(boutique);
-        Proprietaire proprietaire = (Proprietaire) appUserMetier.getUserByLogin(boutiqueDTO.getNomproprietaire());
+
+        Proprietaire proprietaire =  appUserMetier.getProprietaireByusername(boutiqueDTO.getNomproprietaire());
+        if(proprietaire.getBoutique()!=null){
+            throw new ErrorMessages("La boutique possede deja un proprietaire.", HttpStatus.CONFLICT);
+        }
         if(!boutiqueDTO.getNomproprietaire().isEmpty() || boutiqueDTO.getNomproprietaire()!=null){
             this.addProprietaireToBoutique(boutique.getIdBoutique(), proprietaire.getId_user());
         }
@@ -155,7 +160,7 @@ public class BoutiqueService implements BoutiqueMetier {
     public BoutiqueDTO addProprietaireToBoutique(Long idboutique, Long idProprietaire) {
         Boutique boutique = boutiqueRepository.getOne(idboutique);
         Assert.notNull(boutique);
-        Proprietaire proprietaire = (Proprietaire) appUserMetier.findUserById(idProprietaire);
+        Proprietaire proprietaire =  appUserMetier.getProprietaireById(idProprietaire);
         Assert.notNull(proprietaire);
         boutique.setProprietaire(proprietaire);
         proprietaire.setBoutique(boutique);

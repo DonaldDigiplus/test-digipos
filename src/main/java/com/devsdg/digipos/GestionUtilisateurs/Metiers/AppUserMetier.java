@@ -35,4 +35,5 @@ public interface AppUserMetier {
     List<AppUser> findAllClientByKeyWord(String keyword);
     List<String> findAllProprietaireName();
     Proprietaire getProprietaireById(Long id_proprietaire);
+    Proprietaire getProprietaireByusername(String username);
 }

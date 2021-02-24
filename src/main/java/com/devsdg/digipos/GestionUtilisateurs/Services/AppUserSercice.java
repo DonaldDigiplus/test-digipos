@@ -318,17 +318,17 @@ public class AppUserSercice implements AppUserMetier {
             vendeur.setStaff(true);
             vendeur.setClient(false);
 
-            Boutique boutique = boutiqueMetier.getBoutiqueByNomBoutique(activeVendeurDTO.getNomBoutique());
+            /*Boutique boutique = boutiqueMetier.getBoutiqueByNomBoutique(activeVendeurDTO.getNomBoutique());
             if(boutique!=null){
                 vendeur.setBoutique(boutique);
             } else
                 throw new ErrorMessages("Impossible de continuer car la boutique choisi n'existe pas", HttpStatus.NOT_FOUND);
-
+*/
             appRoleService.addRoleToUser(vendeur.getId_user(), "VENDEUR");
         } else {
             //Suppression des fonction du vendeur
             vendeur.setStaff(false);
-            vendeur.setBoutique(null);
+            //vendeur.setBoutique(null);
             vendeur.setActivevendeur(false);
             appRoleService.deleteRoleToUser(vendeur.getId_user());
 
@@ -357,6 +357,11 @@ public class AppUserSercice implements AppUserMetier {
     @Override
     public Proprietaire getProprietaireById(Long id_proprietaire) {
         return proprietaireRepository.getOne(id_proprietaire);
+    }
+
+    @Override
+    public Proprietaire getProprietaireByusername(String username) {
+        return proprietaireRepository.findByUsername(username);
     }
 
     static AppUserDTO permuteAppUserToAppUserDTO(AppUser user){
