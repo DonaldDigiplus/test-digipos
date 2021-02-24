@@ -43,16 +43,16 @@ public class BoutiqueService implements BoutiqueMetier {
         boutique.setDate(new Date());
         boutique.setDateLastModification(new Date());
         boutique.setLien(boutique.getNomBoutique().trim().replace(" ", "")); //Defini le lien qui permettra de definir le lien vers la page de la boutique
-        boutique.setPhotoboutique(serviceCloudinary.saveObjectOnCloudinary(boutiqueDTO.getPhotoboutique(),
-                "Boutiques",
-                boutique.getLien(),
-                "Mode",
-                boutique.getNomBoutique()));
         boutique = boutiqueRepository.save(boutique);
         Proprietaire proprietaire = (Proprietaire) appUserMetier.getUserByLogin(boutiqueDTO.getNomproprietaire());
         if(!boutiqueDTO.getNomproprietaire().isEmpty() || boutiqueDTO.getNomproprietaire()!=null){
             this.addProprietaireToBoutique(boutique.getIdBoutique(), proprietaire.getId_user());
         }
+        boutique.setPhotoboutique(serviceCloudinary.saveObjectOnCloudinary(boutiqueDTO.getPhotoboutique(),
+                "Boutiques",
+                boutique.getLien(),
+                "Mode",
+                boutique.getNomBoutique()));
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutique);
         bdto.setNomproprietaire(proprietaire.getUsername());
         return bdto;

@@ -142,6 +142,7 @@ public class AppUserSercice implements AppUserMetier {
                 vendeur.setBoutique(boutique);
                 vendeur.setStaff(true);
                 vendeur.setAtiveuser(true);
+                vendeur.setActivevendeur(true);
                 vendeur.setDate(new Date());
                 vendeur = vendeurRepository.save(vendeur);
 
