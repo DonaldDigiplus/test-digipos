@@ -149,6 +149,16 @@ public class ProduitService implements ProduitMetier {
     }
 
     @Override
+    public ProduitDTO getProduitByNomProduit(String nomproduit) {
+        Produit produit = produitRepository.findByNomProduit(nomproduit);
+        if(produit!=null){
+            return permuteProduitToProduitDTO(produit);
+        } else
+            throw new ErrorMessages("Le Nom du produit entree n'existe pas", HttpStatus.NOT_FOUND);
+
+    }
+
+    @Override
     public ProduitDTO getProduitByNomAndBoutique(String nomProduit, Long idBoutique) {
         Boutique boutique = boutiqueMetier.getBoutiqueByIdBoutique(idBoutique);
         if ((boutique!=null)){
@@ -171,7 +181,8 @@ public class ProduitService implements ProduitMetier {
             } else
                 throw new ErrorMessages("Le QCode entree n'existe pas", HttpStatus.NOT_FOUND);
         } else
-            throw new ErrorMessages("La boutique entree n'existe pas", HttpStatus.NOT_FOUND);    }
+            throw new ErrorMessages("La boutique entree n'existe pas", HttpStatus.NOT_FOUND);
+    }
 
     @Override
     public ProduitDTO AddProduitAssocie(Long idProduit, Long idProduitAssocie) {
@@ -205,6 +216,20 @@ public class ProduitService implements ProduitMetier {
         List<Produit> produitList = new ArrayList<>(produit.getListproduitAssociers());
 
         return permuteProduitListToProduitDTOList(produitList);
+    }
+
+    @Override
+    public List<String> getAllNomProduit() {
+        return produitRepository.findAllNomProduit();
+    }
+
+    @Override
+    public List<String> getAllNomProduitByBoutique(Long idBoutique) {
+        Boutique boutique = boutiqueMetier.getBoutiqueByIdBoutique(idBoutique);
+        if(boutique!=null){
+            return produitRepository.findAllNomProduitByShop(boutique);
+        } else
+            throw new ErrorMessages("La boutique entree n'existe pas", HttpStatus.NOT_FOUND);
     }
 
     @Override

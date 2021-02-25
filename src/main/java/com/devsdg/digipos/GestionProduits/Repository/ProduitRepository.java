@@ -5,6 +5,8 @@ import com.devsdg.digipos.GestionProduits.Models.Produit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +19,10 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
     Produit findByNomProduit(String nomProduit);
     Produit findByNomProduitAndBoutiquesProduit(String nomProduit, Boutique boutique);
     Produit findByNomProduitAndBoutiquesProduitAndActiveproduitIsTrue(String nomProduit, Boutique boutique);
+    @Query("select q.nomProduit from Produit q order by q.dateproduit desc")
+    List<String> findAllNomProduit();
+    @Query("select q.nomProduit from Produit q where q.boutiquesProduit =: x order by q.dateproduit desc")
+    List<String> findAllNomProduitByShop(@Param("x") Boutique boutique);
     Page<Produit> findAllByBoutiquesProduit(Boutique boutique, Pageable pageable);
     Page<Produit> findAllByBoutiquesProduitAndActiveproduitIsTrue(Boutique boutique, Pageable pageable);
     Page<Produit> findAllByActiveproduitIsTrue(Pageable pageable);

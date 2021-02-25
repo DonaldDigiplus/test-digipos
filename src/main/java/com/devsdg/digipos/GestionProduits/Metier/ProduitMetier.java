@@ -12,11 +12,14 @@ public interface ProduitMetier {
     ProduitDTO updateProduit(ProduitDTO produitDTO);
     ProduitDTO getProduitById(Long id);
     ProduitDTO getProduitByQcode(String qcode);
+    ProduitDTO getProduitByNomProduit(String nomproduit);
     ProduitDTO getProduitByNomAndBoutique(String nomProduit, Long idBoutique);
     ProduitDTO getProduitByNomAndBoutiqueIsActive(String nomProduit, Long idBoutique);
     ProduitDTO AddProduitAssocie(Long idProduit, Long idProduitAssocie);
     ProduitDTO removeProduitAssocie(Long idProduit, Long idProdutAssocie);
     List<ProduitDTO> getProduitAssocie(Long idProduit);
+    List<String> getAllNomProduit();
+    List<String> getAllNomProduitByBoutique(Long idBoutique);
     Page<Produit> getAllProduitByBoutique(Long idBoutique, Pageable pageable);
     Page<Produit> getAllProduitByBoutiqueIsActive(Long idBoutique, Pageable pageable);
     Page<Produit> getAllProduit(Pageable pageable);

@@ -34,9 +34,13 @@ public class ProduitRestController {
     public ProduitDTO getProduitById(@PathVariable Long idproduit){
         return produitMetier.getProduitById(idproduit);
     }
-    @GetMapping("/getproduitbyid/{qcode}")
-    public ProduitDTO getProduitById(@PathVariable String qcode){
+    @GetMapping("/getproduitbyqcode/{qcode}")
+    public ProduitDTO getProduitByQcode(@PathVariable String qcode){
         return produitMetier.getProduitByQcode(qcode);
+    }
+    @GetMapping("/getproduitbynomproduit/{nomproduit}")
+    public ProduitDTO getProduitByNomProduit(@PathVariable String nomproduit){
+        return produitMetier.getProduitByNomProduit(nomproduit);
     }
     @PostMapping("/addproduitassocie/{idproduit}/{idproduitassocie}")
     public ProduitDTO addProduitAssocie(@PathVariable Long idproduit, @PathVariable Long idproduitassocie){
@@ -93,5 +97,13 @@ public class ProduitRestController {
     @PostMapping("/filtreboutiqueandcategorie")
     public Page<Produit> filtreBoutiqueCategorie(@RequestBody FiltreBoutiqueCatalogue filtreBoutiqueCatalogue, Pageable pageable){
         return produitMetier.filtreBoutiqueCategorie(filtreBoutiqueCatalogue, pageable);
+    }
+    @GetMapping("/getallnomproduit")
+    public List<String> getAllNomProduit(){
+        return produitMetier.getAllNomProduit();
+    }
+    @GetMapping("/getallnomproduitbyshop/{idboutique}")
+    public List<String> getAllNomProduitByBoutique(@PathVariable Long idboutique){
+        return produitMetier.getAllNomProduitByBoutique(idboutique);
     }
 }

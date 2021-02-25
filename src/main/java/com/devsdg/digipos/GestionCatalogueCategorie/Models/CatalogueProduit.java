@@ -1,9 +1,11 @@
 package com.devsdg.digipos.GestionCatalogueCategorie.Models;
 
+import com.devsdg.digipos.GestionProduits.Models.Produit;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -108,5 +110,16 @@ public class CatalogueProduit implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @OneToMany(mappedBy = "catalogueProduit")
+    private Collection<Produit> produit;
+
+    public Collection<Produit> getProduit() {
+        return produit;
+    }
+
+    public void setProduit(Collection<Produit> produit) {
+        this.produit = produit;
     }
 }
