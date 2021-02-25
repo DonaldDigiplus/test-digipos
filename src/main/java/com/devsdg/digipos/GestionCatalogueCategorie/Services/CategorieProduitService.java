@@ -32,14 +32,17 @@ public class CategorieProduitService implements CategorieProduitMetier {
     public CategorieProduitDTO saveCategorie(CategorieProduitDTO categorieProduitDTO) {
         CategorieProduit categorieProduit = categorieProduitRepository.findByNomCategorie(categorieProduitDTO.getNomCategorie());
         if(categorieProduit==null){
+            categorieProduit = new CategorieProduit();
             BeanUtils.copyProperties(categorieProduitDTO, categorieProduit);
             categorieProduit.setDate(new Date());
             categorieProduit.setActive(true);
-            categorieProduitRepository.save(categorieProduit);
-            categorieProduit.setImageCategorie(serviceCloudinary.saveObjectOnCloudinary(categorieProduitDTO.getImageCategorie(),
-                    "Categories", null,
-                    categorieProduitDTO.getSecteuractivite(),
-                    categorieProduit.getNomCategorie()));
+           categorieProduit= categorieProduitRepository.save(categorieProduit);
+            if(categorieProduitDTO.getImageCategorie()!=null){
+                categorieProduit.setImageCategorie(serviceCloudinary.saveObjectOnCloudinary(categorieProduitDTO.getImageCategorie(),
+                        "Categories", null,
+                        categorieProduitDTO.getSecteuractivite(),
+                        categorieProduit.getNomCategorie()));
+            }
             return permuteCategorieProduitToCategorieProduitDTO(categorieProduit);
         } else
             throw new ErrorMessages("La categorie que vous essayer de creer existe deja.", HttpStatus.CONFLICT);

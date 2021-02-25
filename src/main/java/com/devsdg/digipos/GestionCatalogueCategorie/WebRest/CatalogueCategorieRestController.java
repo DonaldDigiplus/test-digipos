@@ -114,6 +114,12 @@ public class CatalogueCategorieRestController {
         return catalogueProduitMetier.getCatalogueByNom(nomcatalogue);
     }
 
+
+    @GetMapping("/catalogue/active/{id_catalogue}")
+    boolean getCatalogueByNom(@PathVariable Long id_catalogue) {
+        return catalogueProduitMetier.active_desactive_catalogue(id_catalogue);
+    }
+
     @GetMapping("/catalogue/getcataloguebycategorie/{nomcategorie}")
     Page<CatalogueProduit> getCatalogueByCategorie(@PathVariable String nomcategorie, Pageable pageable) {
         return catalogueProduitMetier.getCatalogueByCategorie(nomcategorie, pageable);

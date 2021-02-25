@@ -45,14 +45,15 @@ public class ShareService implements ShareMetier {
 
     @Override
     public CatalogueProduitDTO uploadImageFile(MultipartFile multipartFile) {
-        CatalogueProduit catalogueProduit = catalogueProduitMetier.getCatalogueByNomIgnoreCase(multipartFile.getOriginalFilename());
+        String name = multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf("."));
+        CatalogueProduit catalogueProduit = catalogueProduitMetier.getCatalogueByNomIgnoreCase(name);
         if(catalogueProduit!=null){
             catalogueProduit.setImage(
                     serviceCloudinary.uploadImage(multipartFile,
                     "Catalogues",
                     null,
                     catalogueProduit.getCategorieProduit().getSecteuractivite(),
-                    multipartFile.getOriginalFilename()));
+                   name));
             return CatalogueProduitService.permuteCatalogueProduitToCatalogueProduitDTO(catalogueProduit);
         } else
             return null;
@@ -113,7 +114,17 @@ public class ShareService implements ShareMetier {
                     if(categorieProduit!=null){
                         CatalogueProduit catalogueProduit = catalogueProduitMetier.getCatalogueByNomIgnoreCase(row.getCell(0).getStringCellValue());
                         if(catalogueProduit==null){
-                            catalogueProduitMetier.saveCatalogue(new CatalogueProduitDTO(categorieProduit, row.getCell(0).getStringCellValue(), row.getCell(3).getStringCellValue(), row.getCell(4).getNumericCellValue()));
+                            String nom=row.getCell(0).getStringCellValue();
+                            String genre=row.getCell(3).getStringCellValue();
+                            double prix=row.getCell(4).getNumericCellValue();
+                            CatalogueProduitDTO catalogueProduitDTO = new CatalogueProduitDTO();
+                            catalogueProduitDTO.setCategorieProduit(categorieProduit);
+                            catalogueProduitDTO.setNomProduit(nom);
+                            catalogueProduitDTO.setGenreClient(genre);
+                            catalogueProduitDTO.setPrix(prix);
+                                    //(categorieProduit, row.getCell(0).getStringCellValue(), row.getCell(3).getStringCellValue(), row.getCell(4).getNumericCellValue());
+                            catalogueProduitDTO.setNomcategorie(categorieProduit.getNomCategorie());
+                            CatalogueProduitDTO catalogue = catalogueProduitMetier.saveCatalogue(catalogueProduitDTO);
                         }
                     }
                 }

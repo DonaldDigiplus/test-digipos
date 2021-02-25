@@ -35,6 +35,7 @@ public class CatalogueProduitService implements CatalogueProduitMetier {
     public CatalogueProduitDTO saveCatalogue(CatalogueProduitDTO catalogueProduitDTO) {
         CatalogueProduit catalogueProduit = catalogueProduitRepository.findByNomProduit(catalogueProduitDTO.getNomProduit());
         if(catalogueProduit==null){
+            catalogueProduit = new CatalogueProduit();
             CategorieProduit categorieProduit = categorieProduitRepository.findByNomCategorie(catalogueProduitDTO.getNomcategorie());
 
             if(categorieProduit!=null){
@@ -43,7 +44,7 @@ public class CatalogueProduitService implements CatalogueProduitMetier {
                 catalogueProduit.setActive(true);
                 catalogueProduit.setCategorieProduit(categorieProduit);
                 catalogueProduit = catalogueProduitRepository.save(catalogueProduit);
-                if(catalogueProduit.getImage()!=null || catalogueProduit.getImage().isEmpty()){
+                if(catalogueProduit.getImage()!=null){
                     catalogueProduit.setImage(serviceCloudinary.saveObjectOnCloudinary(catalogueProduit.getImage(),
                             "Catalogues", null,
                             categorieProduit.getSecteuractivite(),
