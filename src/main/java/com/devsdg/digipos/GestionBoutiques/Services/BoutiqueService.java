@@ -102,6 +102,11 @@ public class BoutiqueService implements BoutiqueMetier {
     }
 
     @Override
+    public Boutique getBoutiqueByIdBoutique(Long idBoutique) {
+        return boutiqueRepository.getOne(idBoutique);
+    }
+
+    @Override
     public BoutiqueDTO getBoutiqueByName(String nomBoutique) {
         BoutiqueDTO bdto = permuteBoutiqueToBoutiqueDTO(boutiqueRepository.findByNomBoutique(nomBoutique));
         bdto.setNomproprietaire(boutiqueRepository.findByNomBoutique(nomBoutique).getProprietaire().getUsername());
@@ -110,8 +115,12 @@ public class BoutiqueService implements BoutiqueMetier {
 
     @Override
     public Boutique getBoutiqueByNomBoutique(String nomBoutique) {
-
         return boutiqueRepository.findByNomBoutique(nomBoutique);
+    }
+
+    @Override
+    public Boutique getBoutiqueByNomBoutiqueIsActive(String nomBoutique) {
+        return boutiqueRepository.findByNomBoutiqueAndActiveboutiqueIsTrue(nomBoutique);
     }
 
     @Override

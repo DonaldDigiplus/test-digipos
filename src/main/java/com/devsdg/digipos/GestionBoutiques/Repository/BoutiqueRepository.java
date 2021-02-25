@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface BoutiqueRepository extends JpaRepository<Boutique, Long> {
     Boutique findByNomBoutique(String nomBoutique);
+    Boutique findByNomBoutiqueAndActiveboutiqueIsTrue(String nomBoutique);
     Boutique findByEmailBoutique(String emailBoutique);
     Boutique findByTelephoneBoutique(String phoneBoutique);
     Boutique findByLien(String lien);

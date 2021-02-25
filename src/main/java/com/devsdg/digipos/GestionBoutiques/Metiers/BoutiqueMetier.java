@@ -10,8 +10,10 @@ public interface BoutiqueMetier {
     BoutiqueDTO saveBoutique(BoutiqueDTO boutiqueDTO);
     BoutiqueDTO updateBoutique(BoutiqueDTO boutiqueDTO);
     BoutiqueDTO getBoutiqueById(Long idBoutique);
+    Boutique getBoutiqueByIdBoutique(Long idBoutique);
     BoutiqueDTO getBoutiqueByName(String nomBoutique);
     Boutique getBoutiqueByNomBoutique(String nomBoutique);
+    Boutique getBoutiqueByNomBoutiqueIsActive(String nomBoutique);
     BoutiqueDTO getBoutiqueByPhone(String phoneBoutique);
     BoutiqueDTO getBoutiqueByLien(String lienBoutique);
     Page<Boutique> getAllBoutiques(Pageable pageable);

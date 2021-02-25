@@ -68,7 +68,7 @@ public class ServiceCloudinary {
             src = categorie + "/" + secteurActivite + "/" + nomBoutique + "/" + objectName;
         } else if(categorie.equalsIgnoreCase("produits")){
             src = categorie + "/" + secteurActivite + "/" + nomBoutique + "/produits/" + objectName;
-        } else if(categorie.equalsIgnoreCase("catalogues")){
+        }  else if(categorie.equalsIgnoreCase("catalogues")){
             src = categorie + "/" + secteurActivite + "/" + objectName;
         } else if(categorie.equalsIgnoreCase("publicites")){
             src = categorie + "/" + nomBoutique + "/" + objectName;
