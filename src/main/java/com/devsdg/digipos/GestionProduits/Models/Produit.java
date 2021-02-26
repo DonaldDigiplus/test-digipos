@@ -74,6 +74,7 @@ public class Produit implements Serializable {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "idstock")
     private Stock stock;
+    private String nomboutique;
 
     public Produit() {
         this.appliqueReduction=false;
@@ -376,5 +377,13 @@ public class Produit implements Serializable {
 
     public void setStock(Stock stock) {
         this.stock = stock;
+    }
+
+    public String getNomboutique() {
+        return nomboutique;
+    }
+
+    public void setNomboutique(String nomboutique) {
+        this.nomboutique = nomboutique;
     }
 }

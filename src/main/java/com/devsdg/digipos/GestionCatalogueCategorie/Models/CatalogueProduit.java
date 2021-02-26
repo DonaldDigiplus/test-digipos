@@ -2,6 +2,7 @@ package com.devsdg.digipos.GestionCatalogueCategorie.Models;
 
 import com.devsdg.digipos.GestionProduits.Models.Produit;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,6 +22,9 @@ public class CatalogueProduit implements Serializable {
     private String nomProduit;
 
     private double prix= 0;
+    @JsonIgnore
+    @OneToMany(mappedBy = "catalogueProduit")
+    private Collection<Produit> produit;
 
     private String genreClient;
     @Column(columnDefinition = "text")
@@ -112,8 +116,6 @@ public class CatalogueProduit implements Serializable {
         this.active = active;
     }
 
-    @OneToMany(mappedBy = "catalogueProduit")
-    private Collection<Produit> produit;
 
     public Collection<Produit> getProduit() {
         return produit;

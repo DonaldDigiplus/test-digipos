@@ -21,12 +21,15 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
     Produit findByNomProduitAndBoutiquesProduitAndActiveproduitIsTrue(String nomProduit, Boutique boutique);
     @Query("select q.nomProduit from Produit q order by q.dateproduit desc")
     List<String> findAllNomProduit();
-    @Query("select q.nomProduit from Produit q where q.boutiquesProduit =: x order by q.dateproduit desc")
-    List<String> findAllNomProduitByShop(@Param("x") Boutique boutique);
+    @Query("select p.nomProduit from Produit p where p.nomboutique like :x")
+    List<String> findAllNomProduitByShop(@Param("x") String nomboutique);
     Page<Produit> findAllByBoutiquesProduit(Boutique boutique, Pageable pageable);
     Page<Produit> findAllByBoutiquesProduitAndActiveproduitIsTrue(Boutique boutique, Pageable pageable);
     Page<Produit> findAllByActiveproduitIsTrue(Pageable pageable);
     Page<Produit> findAllByNomProduitIgnoreCaseLike(String NomProduit,Pageable pageable);
     Page<Produit> findAllByNomCategorie(String nomCategorie, Pageable pageable);
     Page<Produit> findAllByBoutiquesProduitAndNomCategorie(Boutique boutique, String NomCategorie, Pageable pageable);
+    Page<Produit> findAllByNomboutiqueAndNomProduitIgnoreCaseLike(String nom_boutique,String nom_produit, Pageable pageable);
+
+    Page<Produit> findAllByNomboutiqueIgnoreCaseLike(String NomBoutique,Pageable pageable);
 }

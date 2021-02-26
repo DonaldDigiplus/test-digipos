@@ -74,9 +74,9 @@ public class ProduitRestController {
     public Page<Produit> getallproduitbynom(@PathVariable String nom, Pageable pageable) {
         return produitMetier.getProdtuiByPage(nom, pageable);
     }
-    @GetMapping("/getallproduitbyboutique/{idboutique}")
-    public Page<Produit> getallproduitbyboutique(@PathVariable Long idboutique, Pageable pageable) {
-        return produitMetier.getAllProduitByBoutique(idboutique, pageable);
+    @GetMapping("/getallproduitbyboutique/{nomBoutique}")
+    public Page<Produit> getallproduitbyboutique(@PathVariable String nomBoutique, Pageable pageable) {
+        return produitMetier.getAllProduitByBoutique(nomBoutique, pageable);
     }
     @GetMapping("/getallproduitbyboutiqueisactive/{idboutique}")
     public Page<Produit> getallproduitbyboutiqueIsactive(@PathVariable Long idboutique, Pageable pageable) {
@@ -94,16 +94,28 @@ public class ProduitRestController {
     public boolean active_and_desactive_prix(@PathVariable Long idproduit) {
         return produitMetier.active_and_desactive_prix(idproduit);
     }
+    @GetMapping("/active_and_desactive_stock/{idproduit}")
+    public boolean active_and_desactive_stock(@PathVariable Long idproduit) {
+        return produitMetier.active_and_desactive_stock(idproduit);
+    }
     @PostMapping("/filtreboutiqueandcategorie")
     public Page<Produit> filtreBoutiqueCategorie(@RequestBody FiltreBoutiqueCatalogue filtreBoutiqueCatalogue, Pageable pageable){
         return produitMetier.filtreBoutiqueCategorie(filtreBoutiqueCatalogue, pageable);
     }
+
+
+    @GetMapping("/search_boutique_produit/{produit}/{boutique}")
+    public Page<Produit> filtreproduitbyShop(@PathVariable String produit, @PathVariable String boutique,Pageable pageable){
+        return produitMetier.findAllByNomboutiqueAndNomProduitIgnoreCaseLike(boutique,produit,pageable);
+    }
+
+
     @GetMapping("/getallnomproduit")
     public List<String> getAllNomProduit(){
         return produitMetier.getAllNomProduit();
     }
-    @GetMapping("/getallnomproduitbyshop/{idboutique}")
-    public List<String> getAllNomProduitByBoutique(@PathVariable Long idboutique){
-        return produitMetier.getAllNomProduitByBoutique(idboutique);
+    @GetMapping("/getallnomproduitbyshop/{nomboutique}")
+    public List<String> getAllNomProduitByBoutique(@PathVariable String nomboutique){
+        return produitMetier.getAllNomProduitByBoutique(nomboutique);
     }
 }

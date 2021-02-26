@@ -64,10 +64,11 @@ public class ProduitService implements ProduitMetier {
             produit.setDateproduit(new Date());
             produit.setActiveproduit(true);
             produit.setAfficherprix(true);
-            produit.setAppliqueReduction(false);
+            produit.setAppliqueReduction(true);
             produit.setPromoAcitve(false);
+            produit.setManageStock(true);
             produit.setNomCategorie(produitDTO.getCatalogueProduit().getCategorieProduit().getNomCategorie());
-
+            produit.setNomboutique(boutique.getNomBoutique());
             produit = produitRepository.save(produit);
 
             produit.setImage(serviceCloudinary.saveObjectOnCloudinary(
@@ -224,21 +225,19 @@ public class ProduitService implements ProduitMetier {
     }
 
     @Override
-    public List<String> getAllNomProduitByBoutique(Long idBoutique) {
-        Boutique boutique = boutiqueMetier.getBoutiqueByIdBoutique(idBoutique);
-        if(boutique!=null){
-            return produitRepository.findAllNomProduitByShop(boutique);
-        } else
-            throw new ErrorMessages("La boutique entree n'existe pas", HttpStatus.NOT_FOUND);
+    public List<String> getAllNomProduitByBoutique(String nomboutique) {
+            return produitRepository.findAllNomProduitByShop(nomboutique);
     }
 
     @Override
-    public Page<Produit> getAllProduitByBoutique(Long idBoutique, Pageable pageable) {
-        Boutique boutique = boutiqueMetier.getBoutiqueByIdBoutique(idBoutique);
+    public Page<Produit> getAllProduitByBoutique(String nomBoutique, Pageable pageable) {
+        return  produitRepository.findAllByNomboutiqueIgnoreCaseLike(nomBoutique, pageable);
+
+       /* Boutique boutique = boutiqueMetier.getBoutiqueByIdBoutique(idBoutique);
         if(boutique!=null){
             return produitRepository.findAllByBoutiquesProduit(boutique, pageable);
         } else
-            throw new ErrorMessages("La boutique entree n'existe pas", HttpStatus.NOT_FOUND);
+            throw new ErrorMessages("La boutique entree n'existe pas", HttpStatus.NOT_FOUND);*/
     }
 
     @Override
@@ -283,6 +282,11 @@ public class ProduitService implements ProduitMetier {
     }
 
     @Override
+    public Page<Produit> findAllByNomboutiqueAndNomProduitIgnoreCaseLike(String nom_boutique, String nom_produit, Pageable pageable) {
+        return produitRepository.findAllByNomboutiqueAndNomProduitIgnoreCaseLike(nom_boutique, '%'+nom_produit+'%', pageable);
+    }
+
+    @Override
     public boolean active_and_desactive_produit(Long idProduit) {
         Produit produit = produitRepository.getOne(idProduit);
         produit.setActiveproduit(!produit.isActiveproduit());
@@ -301,6 +305,13 @@ public class ProduitService implements ProduitMetier {
         Produit produit = produitRepository.getOne(idProduit);
         produit.setAfficherprix(!produit.isAfficherprix());
         return produit.isAfficherprix();
+    }
+
+    @Override
+    public boolean active_and_desactive_stock(Long idProduit) {
+        Produit produit = produitRepository.getOne(idProduit);
+        produit.setManageStock(!produit.isManageStock());
+        return produit.isManageStock();
     }
 
     static ProduitDTO permuteProduitToProduitDTO(Produit produit){

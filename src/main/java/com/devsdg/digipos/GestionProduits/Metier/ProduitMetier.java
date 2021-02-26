@@ -19,14 +19,16 @@ public interface ProduitMetier {
     ProduitDTO removeProduitAssocie(Long idProduit, Long idProdutAssocie);
     List<ProduitDTO> getProduitAssocie(Long idProduit);
     List<String> getAllNomProduit();
-    List<String> getAllNomProduitByBoutique(Long idBoutique);
-    Page<Produit> getAllProduitByBoutique(Long idBoutique, Pageable pageable);
+    List<String> getAllNomProduitByBoutique(String nomboutique);
+    Page<Produit> getAllProduitByBoutique(String nomBoutique, Pageable pageable);
     Page<Produit> getAllProduitByBoutiqueIsActive(Long idBoutique, Pageable pageable);
     Page<Produit> getAllProduit(Pageable pageable);
     Page<Produit> getAllProduitIsActive(Pageable pageable);
     Page<Produit> getProdtuiByPage(String nomProduit, Pageable pageable);
     Page <Produit> filtreBoutiqueCategorie(FiltreBoutiqueCatalogue filtreBoutiqueCatalogue, Pageable pageable);
+    Page<Produit> findAllByNomboutiqueAndNomProduitIgnoreCaseLike(String nom_boutique,String nom_produit, Pageable pageable);
     boolean active_and_desactive_produit(Long idProduit);
     boolean active_and_desactive_reduction(Long idProduit);
     boolean active_and_desactive_prix(Long idProduit);
+    boolean active_and_desactive_stock(Long idProduit);
 }
